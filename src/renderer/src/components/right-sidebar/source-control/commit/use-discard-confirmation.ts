@@ -151,7 +151,13 @@ export function useSourceControlDiscardConfirmation({
       if (paths.length === 0) {
         return
       }
-      setPendingDiscard({ kind: 'area', area, paths })
+      const untrackedPaths = new Set(grouped.untracked.map((entry) => entry.path))
+      setPendingDiscard({
+        kind: 'area',
+        area,
+        paths,
+        includesUntracked: area === 'unstaged' && paths.some((path) => untrackedPaths.has(path))
+      })
     },
     [activeWorktreeId, grouped, isExecutingBulk, worktreePath]
   )
@@ -170,9 +176,15 @@ export function useSourceControlDiscardConfirmation({
       if (!worktreePath || !activeWorktreeId || isExecutingBulk || paths.length === 0) {
         return
       }
-      setPendingDiscard({ kind: 'area', area, paths: [...paths] })
+      const untrackedPaths = new Set(grouped.untracked.map((entry) => entry.path))
+      setPendingDiscard({
+        kind: 'area',
+        area,
+        paths: [...paths],
+        includesUntracked: area === 'unstaged' && paths.some((path) => untrackedPaths.has(path))
+      })
     },
-    [activeWorktreeId, isExecutingBulk, worktreePath]
+    [activeWorktreeId, grouped.untracked, isExecutingBulk, worktreePath]
   )
   const cancelPendingDiscard = useCallback(() => setPendingDiscard(null), [])
   const confirmPendingDiscard = useCallback((): void => {

@@ -27,6 +27,12 @@ describe('getDefaultSettings', () => {
     expect(getDefaultSettings('/tmp').sourceControlGroupOrder).toBe('changes-first')
   })
 
+  it('keeps untracked separate and committed changes visible by default', () => {
+    const settings = getDefaultSettings('/tmp')
+    expect(settings.sourceControlMergeUntrackedIntoChanges).toBe(false)
+    expect(settings.sourceControlShowCommittedChanges).toBe(true)
+  })
+
   it('defaults mobile pairing to discovered network addresses', () => {
     expect(getDefaultSettings('/tmp').mobilePairingCustomAddress).toBeNull()
     expect(getDefaultSettings('/tmp').mobilePairingCustomAddresses).toEqual([])

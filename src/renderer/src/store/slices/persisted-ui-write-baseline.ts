@@ -27,6 +27,7 @@ export type PersistedUIWriteBaseline = {
   hideWorkspacesFromOtherDevices: boolean
   alwaysShowDefaultBranchWorkspace: boolean
   showDotfilesByWorktree: Record<string, boolean>
+  sourceControlCollapsedSectionsByWorktree: Record<string, string[]>
   filterRepoIds: readonly string[]
   acknowledgedAgentsByPaneKey: Record<string, number>
   activityClearedAtByPaneKey: Record<string, number>
@@ -56,6 +57,7 @@ const PERSISTED_UI_WRITE_BASELINE_FIELD_SET = {
   hideWorkspacesFromOtherDevices: true,
   alwaysShowDefaultBranchWorkspace: true,
   showDotfilesByWorktree: true,
+  sourceControlCollapsedSectionsByWorktree: true,
   filterRepoIds: true,
   acknowledgedAgentsByPaneKey: true,
   activityClearedAtByPaneKey: true,
@@ -95,16 +97,40 @@ function stringArrayEqual(a: readonly string[], b: readonly string[]): boolean {
   return a === b || (a.length === b.length && a.every((value, i) => value === b[i]))
 }
 
+function stringArrayRecordEqual(
+  a: Record<string, string[]> | undefined,
+  b: Record<string, string[]> | undefined
+): boolean {
+  if (a === b) {
+    return true
+  }
+  if (!a || !b) {
+    return false
+  }
+  const aKeys = Object.keys(a)
+  return (
+    aKeys.length === Object.keys(b).length &&
+    aKeys.every((key) => Boolean(b[key]) && stringArrayEqual(a[key]!, b[key]!))
+  )
+}
+
 function writeFieldEqual(field: keyof PersistedUIWriteBaseline, a: unknown, b: unknown): boolean {
   if (field === 'filterRepoIds') {
     return stringArrayEqual(a as readonly string[], b as readonly string[])
   }
   if (
     field === 'showDotfilesByWorktree' ||
+    field === 'sourceControlCollapsedSectionsByWorktree' ||
     field === 'acknowledgedAgentsByPaneKey' ||
     field === 'activityClearedAtByPaneKey' ||
     field === 'manuallyUnreadTurnsByPaneKey'
   ) {
+    if (field === 'sourceControlCollapsedSectionsByWorktree') {
+      return stringArrayRecordEqual(
+        a as Record<string, string[]> | undefined,
+        b as Record<string, string[]> | undefined
+      )
+    }
     return shallowRecordEqual(
       a as Record<string, unknown> | undefined,
       b as Record<string, unknown> | undefined

@@ -42,6 +42,7 @@ export function useSourceControlPanelFoundation() {
     sourceControlGroupOrder,
     sourceControlRef,
     sourceControlViewMode,
+    settings,
     updateRepo,
     updateSettings,
     worktreeMap,
@@ -70,6 +71,7 @@ export function useSourceControlPanelFoundation() {
     sourceControlGroupOrder,
     sourceControlRef,
     sourceControlViewMode,
+    settings,
     worktreeMap,
     worktreePath
   })

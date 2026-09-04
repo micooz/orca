@@ -20,6 +20,7 @@ import {
 } from '../../source-control-tree'
 import {
   buildSourceControlDisplaySections,
+  mergeUntrackedIntoSourceControlChanges,
   SOURCE_CONTROL_AREAS,
   type SourceControlDisplaySection,
   type SourceControlDisplaySectionId,
@@ -50,6 +51,7 @@ export type SourceControlFileProjection = {
     SourceControlDisplaySection
   >
   filteredBranchEntries: GitBranchChangeEntry[]
+  showCommittedChanges: boolean
   visibleTreeRowsBySection: Partial<
     Record<SourceControlDisplaySectionId, RenderableSourceControlNode[]>
   >
@@ -72,7 +74,9 @@ export function useSourceControlFileProjection({
   expandedSubmoduleKeys,
   submoduleStatusByKey,
   sourceControlViewMode,
-  collapsedSections
+  collapsedSections,
+  mergeUntrackedIntoChanges,
+  showCommittedChanges
 }: {
   entries: GitStatusEntry[]
   branchEntries: GitBranchChangeEntry[]
@@ -86,6 +90,8 @@ export function useSourceControlFileProjection({
   submoduleStatusByKey: Record<string, SubmoduleStatusState>
   sourceControlViewMode: SourceControlViewMode
   collapsedSections: Set<string>
+  mergeUntrackedIntoChanges: boolean
+  showCommittedChanges: boolean
 }): SourceControlFileProjection {
   const grouped = useMemo(() => {
     const groups: SourceControlEntryGroups = {
@@ -114,13 +120,21 @@ export function useSourceControlFileProjection({
     [fileFilterState, grouped]
   )
 
+  const displayGroups = useMemo(
+    () => mergeUntrackedIntoSourceControlChanges(filteredGrouped, mergeUntrackedIntoChanges),
+    [filteredGrouped, mergeUntrackedIntoChanges]
+  )
+  const unfilteredDisplayGroups = useMemo(
+    () => mergeUntrackedIntoSourceControlChanges(grouped, mergeUntrackedIntoChanges),
+    [grouped, mergeUntrackedIntoChanges]
+  )
   const displaySections = useMemo(
-    () => buildSourceControlDisplaySections(filteredGrouped, sourceControlGroupOrder),
-    [filteredGrouped, sourceControlGroupOrder]
+    () => buildSourceControlDisplaySections(displayGroups, sourceControlGroupOrder),
+    [displayGroups, sourceControlGroupOrder]
   )
   const unfilteredDisplaySections = useMemo(
-    () => buildSourceControlDisplaySections(grouped, sourceControlGroupOrder),
-    [grouped, sourceControlGroupOrder]
+    () => buildSourceControlDisplaySections(unfilteredDisplayGroups, sourceControlGroupOrder),
+    [sourceControlGroupOrder, unfilteredDisplayGroups]
   )
   const unfilteredDisplaySectionsById = useMemo(
     () => new Map(unfilteredDisplaySections.map((section) => [section.id, section])),
@@ -128,8 +142,11 @@ export function useSourceControlFileProjection({
   )
 
   const filteredBranchEntries = useMemo(
-    () => filterAndSortSourceControlPathEntries(branchEntries, fileFilterState),
-    [branchEntries, fileFilterState]
+    () =>
+      showCommittedChanges
+        ? filterAndSortSourceControlPathEntries(branchEntries, fileFilterState)
+        : [],
+    [branchEntries, fileFilterState, showCommittedChanges]
   )
 
   const treeRootsBySection = useMemo(() => {
@@ -139,13 +156,11 @@ export function useSourceControlFileProjection({
       const sectionRoots = compactSourceControlTree(
         buildGitStatusSourceControlTree(section.area, section.items)
       )
-      roots[section.id] =
+      roots[section.id] = applyGitStatusEntryAreasToSourceControlTree(
         section.id === 'conflicts'
-          ? applyGitStatusEntryAreasToSourceControlTree(
-              // Why: conflict rows can mirror normal paths, so their folder collapse keys must not share state with normal sections.
-              namespaceSourceControlTreeDirectoryKeys(sectionRoots, 'conflicts')
-            )
+          ? namespaceSourceControlTreeDirectoryKeys(sectionRoots, 'conflicts')
           : sectionRoots
+      )
     }
     return roots
   }, [displaySections])
@@ -234,6 +249,7 @@ export function useSourceControlFileProjection({
     displaySections,
     unfilteredDisplaySectionsById,
     filteredBranchEntries,
+    showCommittedChanges,
     visibleTreeRowsBySection,
     visibleListRowsBySection,
     visibleBranchTreeRows,

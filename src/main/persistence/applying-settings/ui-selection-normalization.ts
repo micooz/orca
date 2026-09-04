@@ -1,6 +1,7 @@
 import type { PersistedState } from '../../../shared/persisted-state-types'
 import { getDefaultUIState } from '../../../shared/constants'
 import { isPluginPanelTabKey } from '../../../shared/plugins/plugin-manifest'
+export { normalizeSourceControlCollapsedSectionsByWorktree } from '../../../shared/source-control-collapsed-sections'
 
 export function normalizeGroupBy(groupBy: unknown): PersistedState['ui']['groupBy'] {
   if (

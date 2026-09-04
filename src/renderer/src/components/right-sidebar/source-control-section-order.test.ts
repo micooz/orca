@@ -4,6 +4,7 @@ import {
   buildSourceControlDisplaySections,
   getConflictReviewEntries,
   getSourceControlSectionViewAction,
+  mergeUntrackedIntoSourceControlChanges,
   resolveSourceControlGroupOrder,
   splitPinnedSourceControlConflicts,
   type SourceControlEntryGroups
@@ -46,6 +47,21 @@ describe('resolveSourceControlGroupOrder', () => {
 })
 
 describe('buildSourceControlDisplaySections', () => {
+  it('visually merges untracked files into Changes without changing their real area', () => {
+    const input = groups({
+      unstaged: [entry({ path: 'b.ts' })],
+      untracked: [entry({ area: 'untracked', path: 'a.ts', status: 'untracked' })]
+    })
+
+    expect(mergeUntrackedIntoSourceControlChanges(input, false)).toBe(input)
+    const merged = mergeUntrackedIntoSourceControlChanges(input, true)
+    expect(merged.untracked).toEqual([])
+    expect(merged.unstaged.map((item) => [item.path, item.area])).toEqual([
+      ['a.ts', 'untracked'],
+      ['b.ts', 'unstaged']
+    ])
+  })
+
   it('uses the configured order for normal sections', () => {
     const sections = buildSourceControlDisplaySections(
       groups({

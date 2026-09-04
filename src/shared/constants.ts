@@ -269,6 +269,7 @@ export function getDefaultUIState(): PersistedUIState {
     hideWorkspacesFromOtherDevices: false,
     alwaysShowDefaultBranchWorkspace: true,
     showDotfilesByWorktree: {},
+    sourceControlCollapsedSectionsByWorktree: {},
     filterRepoIds: [],
     agentsVisibleHostIds: null,
     agentsFilterRepoIds: [],

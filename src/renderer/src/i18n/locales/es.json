@@ -6175,7 +6175,11 @@
           "compareAgainstUpstreamTitle": "Base de comparación predeterminada",
           "compareAgainstUpstreamDescription": "Elige qué base usa Control de código fuente de forma predeterminada para las comparaciones de cambios confirmados. El upstream de la rama sigue automáticamente la rama actual y recurre a la rama predeterminada del repositorio cuando no hay upstream. Aun así, puedes cambiar la base de comparación por worktree desde el panel Git de ese worktree. Los objetivos de Pull Request y rebase no cambian.",
           "compareBaseRepositoryDefault": "Predeterminada del repositorio",
-          "compareBaseBranchUpstream": "Upstream de la rama"
+          "compareBaseBranchUpstream": "Upstream de la rama",
+          "mergeUntrackedFilesTitle": "Combinar archivos sin seguimiento en Cambios",
+          "mergeUntrackedFilesDescription": "Muestra los archivos sin seguimiento en el grupo Cambios en lugar de un grupo separado.",
+          "showCommittedChangesTitle": "Mostrar cambios confirmados",
+          "showCommittedChangesDescription": "Muestra los archivos modificados por commits en la rama actual respecto a la base seleccionada."
         },
         "HiddenExperimentalGroup": {
           "7c4e18d2f6": "Activa los gestos de captura del fallo de negrita en esta máquina: {{samplingShortcut}} inicia una ráfaga de muestreo; {{captureShortcut}} captura evidencia del panel en disco.",
@@ -8458,6 +8462,13 @@
             "localChanges": "cambios locales",
             "originMaster": "origin/master",
             "committedChanges": "cambios confirmados",
+            "mergeUntrackedFilesTitle": "Combinar archivos sin seguimiento en Cambios",
+            "mergeUntrackedFilesDescription": "Muestra los archivos sin seguimiento en el grupo Cambios en lugar de un grupo separado.",
+            "showCommittedChangesTitle": "Mostrar cambios confirmados",
+            "showCommittedChangesDescription": "Muestra los archivos modificados por commits en la rama actual respecto a la base seleccionada.",
+            "untrackedFiles": "archivos sin seguimiento",
+            "changesGroup": "grupo Cambios",
+            "branchCompare": "comparación de rama",
             "defaultCompareBase": "base de comparación predeterminada",
             "defaultBranch": "rama predeterminada",
             "repositoryDefault": "predeterminada del repositorio",
@@ -11212,7 +11223,9 @@
                   "40e9357b2a": "Esto restaurará el archivo desde HEAD y descartará la eliminación. Esto no se puede deshacer.",
                   "5c0bdbc4cb": "¿Restaurar \"{{value0}}\"?",
                   "d97bf697c9": "Esto eliminará permanentemente este archivo. Esto no se puede deshacer.",
-                  "96c772bee9": "¿Eliminar \"{{value0}}\"?"
+                  "96c772bee9": "¿Eliminar \"{{value0}}\"?",
+                  "mixedTitle": "¿Descartar cambios y eliminar archivos sin seguimiento?",
+                  "mixedDescription": "Esto revertirá los cambios con seguimiento y eliminará permanentemente los archivos sin seguimiento. Esta acción no se puede deshacer."
                 },
                 "dialog": {
                   "3bc61dc989": "Cancelar",

@@ -18,6 +18,54 @@ export const getGitPaneSearchEntries = createLocalizedCatalog(() => [
   },
   {
     title: translate(
+      'auto.components.settings.git.search.mergeUntrackedFilesTitle',
+      'Merge Untracked Files into Changes'
+    ),
+    description: translate(
+      'auto.components.settings.git.search.mergeUntrackedFilesDescription',
+      'Show untracked files in the Changes group instead of a separate Untracked Files group.'
+    ),
+    keywords: [
+      ...translateSearchKeyword(
+        'auto.components.settings.git.search.untrackedFiles',
+        'untracked files'
+      ),
+      ...translateSearchKeyword(
+        'auto.components.settings.git.search.changesGroup',
+        'changes group'
+      ),
+      ...translateSearchKeyword(
+        'auto.components.settings.git.search.sourceControl',
+        'source control'
+      )
+    ]
+  },
+  {
+    title: translate(
+      'auto.components.settings.git.search.showCommittedChangesTitle',
+      'Show Committed Changes'
+    ),
+    description: translate(
+      'auto.components.settings.git.search.showCommittedChangesDescription',
+      'Show files changed by commits on the current branch compared with the selected base.'
+    ),
+    keywords: [
+      ...translateSearchKeyword(
+        'auto.components.settings.git.search.committedChanges',
+        'committed changes'
+      ),
+      ...translateSearchKeyword(
+        'auto.components.settings.git.search.branchCompare',
+        'branch compare'
+      ),
+      ...translateSearchKeyword(
+        'auto.components.settings.git.search.sourceControl',
+        'source control'
+      )
+    ]
+  },
+  {
+    title: translate(
       'auto.components.settings.git.search.f8bda25f29',
       'Keep Local Main Up to Date'
     ),

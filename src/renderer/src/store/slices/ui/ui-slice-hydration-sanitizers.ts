@@ -1,6 +1,7 @@
 import type { AppState } from '../../types'
 import type { PersistedTrustedOrcaHooks } from '../../../../../shared/orca-yaml-hook-types'
 import type { PersistedUIState } from '../../../../../shared/persisted-ui-state-types'
+import { normalizeSourceControlCollapsedSectionsByWorktree } from '../../../../../shared/source-control-collapsed-sections'
 import type {
   TaskViewPresetId,
   TopLevelView,
@@ -92,6 +93,9 @@ export function sanitizeShowDotfilesByWorktree(value: unknown): Record<string, b
   }
   return out
 }
+
+export const sanitizeSourceControlCollapsedSectionsByWorktree =
+  normalizeSourceControlCollapsedSectionsByWorktree
 
 export function sanitizePersistedSidebarWidth(
   width: unknown,

@@ -25,6 +25,7 @@ import type {
   RenderableSubmoduleListItem
 } from './submodule-expansion'
 import type { SourceControlRowOpenEvent } from './split-open'
+import { getDiscardPathsForEntries } from './directory-action-paths'
 
 const SECTION_LABELS: Record<SourceControlSectionArea, { key: string; fallback: string }> = {
   staged: {
@@ -97,7 +98,10 @@ export function SourceControlUncommittedSections(props: {
         const actionItems = actionSection.items
         const stageAllPaths = actionItems.filter(isStageableStatusEntry).map((entry) => entry.path)
         const unstageAllPaths = getUnstageAllPaths(actionItems)
-        const discardAllPaths = getDiscardAllPaths(actionItems, area)
+        const discardAllPaths =
+          area === 'staged'
+            ? getDiscardAllPaths(actionItems, area)
+            : getDiscardPathsForEntries(actionItems)
         const canStageAll = !props.normalizedFilter && stageAllPaths.length > 0
         const canUnstageAll = !props.normalizedFilter && unstageAllPaths.length > 0
         const canRevertAll = !props.normalizedFilter && discardAllPaths.length > 0

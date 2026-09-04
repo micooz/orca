@@ -27,6 +27,7 @@ function makeBaseline(overrides: Partial<PersistedUIWriteBaseline> = {}): Persis
     hideWorkspacesFromOtherDevices: false,
     alwaysShowDefaultBranchWorkspace: true,
     showDotfilesByWorktree: {},
+    sourceControlCollapsedSectionsByWorktree: {},
     filterRepoIds: [],
     acknowledgedAgentsByPaneKey: {},
     activityClearedAtByPaneKey: {},
@@ -58,11 +59,13 @@ describe('diffPersistedUIWriteFields', () => {
     const a = makeBaseline({
       filterRepoIds: ['r1', 'r2'],
       showDotfilesByWorktree: { w1: true },
+      sourceControlCollapsedSectionsByWorktree: { w1: ['history', 'branch'] },
       acknowledgedAgentsByPaneKey: { p1: 5 }
     })
     const b = makeBaseline({
       filterRepoIds: ['r1', 'r2'],
       showDotfilesByWorktree: { w1: true },
+      sourceControlCollapsedSectionsByWorktree: { w1: ['history', 'branch'] },
       acknowledgedAgentsByPaneKey: { p1: 5 }
     })
     expect(diffPersistedUIWriteFields(a, b)).toEqual({})

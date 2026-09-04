@@ -31,6 +31,10 @@ export type SourceControlDirectoryActionPaths = {
   discardPaths: string[]
 }
 
+export function getDiscardPathsForEntries(entries: readonly GitStatusEntry[]): string[] {
+  return [...getDiscardAllPaths(entries, 'unstaged'), ...getDiscardAllPaths(entries, 'untracked')]
+}
+
 export function getSourceControlDirectoryActionPaths(
   node: SourceControlTreeDirectoryNode
 ): SourceControlDirectoryActionPaths {
@@ -38,9 +42,6 @@ export function getSourceControlDirectoryActionPaths(
   return {
     stagePaths: entries.filter(isStageableStatusEntry).map((entry) => entry.path),
     unstagePaths: getUnstageAllPaths(entries),
-    discardPaths:
-      node.area === 'unstaged' || node.area === 'untracked'
-        ? getDiscardAllPaths(entries, node.area)
-        : []
+    discardPaths: node.area === 'staged' ? [] : getDiscardPathsForEntries(entries)
   }
 }

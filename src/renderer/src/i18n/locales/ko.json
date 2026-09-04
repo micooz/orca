@@ -6165,7 +6165,11 @@
           "compareAgainstUpstreamTitle": "기본 비교 기준",
           "compareAgainstUpstreamDescription": "소스 제어가 커밋된 변경 사항 비교에 기본으로 사용할 기준을 선택합니다. 브랜치 업스트림은 현재 브랜치를 자동으로 따라가며, 업스트림이 없으면 저장소 기본 브랜치로 돌아갑니다. 비교 기준은 해당 worktree의 Git 패널에서 worktree별로 변경할 수 있습니다. Pull Request 및 리베이스 대상은 변경되지 않습니다.",
           "compareBaseRepositoryDefault": "저장소 기본값",
-          "compareBaseBranchUpstream": "브랜치 업스트림"
+          "compareBaseBranchUpstream": "브랜치 업스트림",
+          "mergeUntrackedFilesTitle": "추적되지 않은 파일을 변경 사항에 병합",
+          "mergeUntrackedFilesDescription": "추적되지 않은 파일을 별도 그룹 대신 변경 사항 그룹에 표시합니다.",
+          "showCommittedChangesTitle": "커밋된 변경 사항 표시",
+          "showCommittedChangesDescription": "현재 브랜치와 선택한 기준 사이에서 커밋으로 변경된 파일을 표시합니다."
         },
         "HiddenExperimentalGroup": {
           "7c4e18d2f6": "이 컴퓨터에서 굵게 표시 결함 캡처 제스처를 활성화합니다. {{samplingShortcut}}하면 샘플링 버스트가 시작되고, {{captureShortcut}}하면 창 증거를 디스크에 캡처합니다.",
@@ -8448,6 +8452,13 @@
             "localChanges": "로컬 변경 사항",
             "originMaster": "origin/master",
             "committedChanges": "커밋된 변경 사항",
+            "mergeUntrackedFilesTitle": "추적되지 않은 파일을 변경 사항에 병합",
+            "mergeUntrackedFilesDescription": "추적되지 않은 파일을 별도 그룹 대신 변경 사항 그룹에 표시합니다.",
+            "showCommittedChangesTitle": "커밋된 변경 사항 표시",
+            "showCommittedChangesDescription": "현재 브랜치와 선택한 기준 사이에서 커밋으로 변경된 파일을 표시합니다.",
+            "untrackedFiles": "추적되지 않은 파일",
+            "changesGroup": "변경 사항 그룹",
+            "branchCompare": "브랜치 비교",
             "defaultCompareBase": "기본 비교 기준",
             "defaultBranch": "기본 브랜치",
             "repositoryDefault": "저장소 기본값",
@@ -11233,7 +11244,9 @@
                   "40e9357b2a": "이렇게 하면 HEAD에서 파일을 복원하고 파일 삭제를 취소합니다. 이 작업은 취소할 수 없습니다.",
                   "5c0bdbc4cb": "'{{value0}}'을(를) 복원하시겠습니까?",
                   "d97bf697c9": "이 파일이 영구적으로 삭제됩니다. 이 작업은 취소할 수 없습니다.",
-                  "96c772bee9": "'{{value0}}'을 삭제하시겠습니까?"
+                  "96c772bee9": "'{{value0}}'을 삭제하시겠습니까?",
+                  "mixedTitle": "변경 사항을 취소하고 추적되지 않은 파일을 삭제하시겠습니까?",
+                  "mixedDescription": "추적된 변경 사항을 되돌리고 추적되지 않은 파일을 영구적으로 삭제합니다. 이 작업은 취소할 수 없습니다."
                 },
                 "dialog": {
                   "3bc61dc989": "취소",

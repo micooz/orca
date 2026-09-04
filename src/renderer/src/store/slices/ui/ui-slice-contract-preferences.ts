@@ -62,6 +62,11 @@ export type UISlicePreferences = {
   showDotfilesByWorktree: Record<string, boolean>
   setShowDotfilesForWorktree: (worktreeId: string, showDotfiles: boolean) => void
   toggleShowDotfilesForWorktree: (worktreeId: string) => void
+  sourceControlCollapsedSectionsByWorktree: Record<string, string[]>
+  setSourceControlCollapsedSectionsForWorktree: (
+    worktreeId: string,
+    sections: readonly string[]
+  ) => void
   filterRepoIds: readonly string[]
   setFilterRepoIds: (ids: readonly string[]) => void
   /** Agents-view scope filters, independent from workspace navigation filters. */

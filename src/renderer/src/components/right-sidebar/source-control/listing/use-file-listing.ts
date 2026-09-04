@@ -39,6 +39,7 @@ export function useSourceControlFileListing({
   sourceControlGroupOrder,
   sourceControlRef,
   sourceControlViewMode,
+  settings,
   worktreeMap,
   worktreePath
 }: {
@@ -63,6 +64,7 @@ export function useSourceControlFileListing({
   sourceControlGroupOrder: SourceControlPanelViewState['sourceControlGroupOrder']
   sourceControlRef: SourceControlPanelViewState['sourceControlRef']
   sourceControlViewMode: SourceControlPanelViewState['sourceControlViewMode']
+  settings: SourceControlWorktreeContext['settings']
   worktreeMap: SourceControlWorktreeContext['worktreeMap']
   worktreePath: string | null
 }) {
@@ -82,6 +84,7 @@ export function useSourceControlFileListing({
     displaySections,
     unfilteredDisplaySectionsById,
     filteredBranchEntries,
+    showCommittedChanges,
     visibleTreeRowsBySection,
     visibleListRowsBySection,
     visibleBranchTreeRows,
@@ -98,7 +101,9 @@ export function useSourceControlFileListing({
     expandedSubmoduleKeys,
     submoduleStatusByKey,
     sourceControlViewMode,
-    collapsedSections
+    collapsedSections,
+    mergeUntrackedIntoChanges: settings?.sourceControlMergeUntrackedIntoChanges ?? false,
+    showCommittedChanges: settings?.sourceControlShowCommittedChanges ?? true
   })
   const { gitHistoryState, refreshGitHistory, refreshGitHistoryRef } = useSourceControlGitHistory({
     activeRepoSettings,
@@ -200,6 +205,7 @@ export function useSourceControlFileListing({
     expandedSubmoduleKeys,
     fileFilterState,
     filteredBranchEntries,
+    showCommittedChanges,
     filteredGrouped,
     flatEntriesByKey,
     gitHistoryState,

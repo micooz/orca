@@ -22,7 +22,7 @@ import {
   getKeepLocalMainUpToDateTitle
 } from './keep-local-main-up-to-date-setting'
 import { translate } from '@/i18n/i18n'
-import { SettingsRow, SettingsSegmentedControl } from './SettingsFormControls'
+import { SettingsRow, SettingsSegmentedControl, SettingsSwitchRow } from './SettingsFormControls'
 
 export { getGitPaneSearchEntries }
 
@@ -50,7 +50,6 @@ const SOURCE_CONTROL_GROUP_ORDER_KEYWORDS = [
   'source control',
   'git changes'
 ]
-
 export function shouldShowAutoRenameBranchSetting(
   searchQuery: string,
   hasUnsavedBranchPromptChanges: boolean
@@ -147,6 +146,32 @@ export function GitPane({
   const storeSearchQuery = useAppStore((s) => s.settingsSearchQuery)
   const searchQuery = settingsSearchQuery ?? storeSearchQuery
   const keepLocalMainUpToDateTitle = getKeepLocalMainUpToDateTitle()
+  const mergeUntrackedTitle = translate(
+    'auto.components.settings.GitPane.mergeUntrackedFilesTitle',
+    'Merge Untracked Files into Changes'
+  )
+  const mergeUntrackedDescription = translate(
+    'auto.components.settings.GitPane.mergeUntrackedFilesDescription',
+    'Show untracked files in the Changes group instead of a separate Untracked Files group.'
+  )
+  const showCommittedTitle = translate(
+    'auto.components.settings.GitPane.showCommittedChangesTitle',
+    'Show Committed Changes'
+  )
+  const showCommittedDescription = translate(
+    'auto.components.settings.GitPane.showCommittedChangesDescription',
+    'Show files changed by commits on the current branch compared with the selected base.'
+  )
+  const mergeUntrackedKeywords = [
+    translate('auto.components.settings.git.search.untrackedFiles', 'untracked files'),
+    translate('auto.components.settings.git.search.changesGroup', 'changes group'),
+    translate('auto.components.settings.git.search.sourceControl', 'source control')
+  ]
+  const showCommittedKeywords = [
+    translate('auto.components.settings.git.search.committedChanges', 'committed changes'),
+    translate('auto.components.settings.git.search.branchCompare', 'branch compare'),
+    translate('auto.components.settings.git.search.sourceControl', 'source control')
+  ]
 
   const isBranchPrefixInputMode = settings.branchPrefix !== 'none'
   // Local draft for the editable custom prefix: updateSettings persists through
@@ -304,6 +329,56 @@ export function GitPane({
         settings={settings}
         updateSettings={updateSettings}
       />
+    ) : null,
+    matchesSettingsSearch(searchQuery, {
+      title: mergeUntrackedTitle,
+      description: mergeUntrackedDescription,
+      keywords: mergeUntrackedKeywords
+    }) ? (
+      <SearchableSetting
+        key="merge-untracked-files"
+        title={mergeUntrackedTitle}
+        description={mergeUntrackedDescription}
+        keywords={mergeUntrackedKeywords}
+      >
+        <SettingsSwitchRow
+          label={mergeUntrackedTitle}
+          description={mergeUntrackedDescription}
+          checked={settings.sourceControlMergeUntrackedIntoChanges ?? false}
+          onChange={() =>
+            updateSettings({
+              sourceControlMergeUntrackedIntoChanges: !(
+                settings.sourceControlMergeUntrackedIntoChanges ?? false
+              )
+            })
+          }
+        />
+      </SearchableSetting>
+    ) : null,
+    matchesSettingsSearch(searchQuery, {
+      title: showCommittedTitle,
+      description: showCommittedDescription,
+      keywords: showCommittedKeywords
+    }) ? (
+      <SearchableSetting
+        key="show-committed-changes"
+        title={showCommittedTitle}
+        description={showCommittedDescription}
+        keywords={showCommittedKeywords}
+      >
+        <SettingsSwitchRow
+          label={showCommittedTitle}
+          description={showCommittedDescription}
+          checked={settings.sourceControlShowCommittedChanges ?? true}
+          onChange={() =>
+            updateSettings({
+              sourceControlShowCommittedChanges: !(
+                settings.sourceControlShowCommittedChanges ?? true
+              )
+            })
+          }
+        />
+      </SearchableSetting>
     ) : null,
     compareAgainstUpstreamMatchesSearch(searchQuery) ? (
       <CompareAgainstUpstreamSetting

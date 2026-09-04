@@ -60,6 +60,7 @@ export function SourceControlPanelContent(props: SourceControlPanelReadyProps) {
     requestDiscardPaths,
     revealInExplorer,
     selectedKeySet,
+    showCommittedChanges,
     setBaseRefDialogOpen,
     sourceControlAiActionsVisible,
     sourceControlViewMode,
@@ -80,7 +81,8 @@ export function SourceControlPanelContent(props: SourceControlPanelReadyProps) {
     filteredGrouped.untracked.length > 0
   const hasFilteredBranchEntries = filteredBranchEntries.length > 0
   const showGenericEmptyState =
-    !hasUncommittedEntries && branchSummary?.status === 'ready' && branchEntries.length === 0
+    !hasUncommittedEntries &&
+    (showCommittedChanges ? branchSummary?.status === 'ready' && branchEntries.length === 0 : true)
 
   return (
     <>
@@ -172,12 +174,14 @@ export function SourceControlPanelContent(props: SourceControlPanelReadyProps) {
         />
       )}
 
-      {shouldShowSourceControlCompareUnavailableCard(
+      {showCommittedChanges &&
+      shouldShowSourceControlCompareUnavailableCard(
         branchSummary,
         hasUncommittedEntries,
         branchEntries.length > 0,
         Boolean(normalizedFilter)
-      ) && branchSummary ? (
+      ) &&
+      branchSummary ? (
         <CompareUnavailable
           summary={branchSummary}
           onChangeBaseRef={() => setBaseRefDialogOpen(true)}

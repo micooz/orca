@@ -33,6 +33,7 @@ import {
   normalizeProjectOrderBy,
   normalizeRightSidebarExplorerView,
   normalizeRightSidebarTab,
+  normalizeSourceControlCollapsedSectionsByWorktree,
   normalizeShowDotfilesByWorktree,
   normalizeSortBy
 } from './ui-selection-normalization'
@@ -171,6 +172,14 @@ export function updatePersistedUI(
       sanitizedUpdates.showDotfilesByWorktree !== undefined
         ? normalizeShowDotfilesByWorktree(sanitizedUpdates.showDotfilesByWorktree)
         : normalizeShowDotfilesByWorktree(operations.state.ui?.showDotfilesByWorktree),
+    sourceControlCollapsedSectionsByWorktree:
+      sanitizedUpdates.sourceControlCollapsedSectionsByWorktree !== undefined
+        ? normalizeSourceControlCollapsedSectionsByWorktree(
+            sanitizedUpdates.sourceControlCollapsedSectionsByWorktree
+          )
+        : normalizeSourceControlCollapsedSectionsByWorktree(
+            operations.state.ui?.sourceControlCollapsedSectionsByWorktree
+          ),
     featureTipsSeenIds:
       sanitizedUpdates.featureTipsSeenIds !== undefined
         ? normalizeFeatureTipIds(sanitizedUpdates.featureTipsSeenIds)

@@ -35,7 +35,11 @@ export function removeSourceRepo(
           ? null
           : state.ui.lastActiveWorktreeId,
       filterRepoIds: state.ui.filterRepoIds?.filter((id) => id !== repoId) ?? [],
-      showDotfilesByWorktree: removeRepoWorktreeRecord(state.ui.showDotfilesByWorktree, repoId)
+      showDotfilesByWorktree: removeRepoWorktreeRecord(state.ui.showDotfilesByWorktree, repoId),
+      sourceControlCollapsedSectionsByWorktree: removeRepoWorktreeRecord(
+        state.ui.sourceControlCollapsedSectionsByWorktree,
+        repoId
+      )
     }
   }
   delete next.sparsePresetsByRepo[repoId]

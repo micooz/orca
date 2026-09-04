@@ -132,6 +132,8 @@ export function buildDefaultSettings(args: {
     showGitIgnoredFiles: true,
     sourceControlViewMode: 'list',
     sourceControlGroupOrder: DEFAULT_SOURCE_CONTROL_GROUP_ORDER,
+    sourceControlMergeUntrackedIntoChanges: false,
+    sourceControlShowCommittedChanges: true,
     sourceControlCompareAgainstUpstream: false,
     showTitlebarAppName: true,
     showTasksButton: true,

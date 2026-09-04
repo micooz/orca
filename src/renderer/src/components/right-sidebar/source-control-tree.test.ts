@@ -10,6 +10,7 @@ import {
   flattenSourceControlTree,
   namespaceSourceControlTreeDirectoryKeys
 } from './source-control-tree'
+import { getSourceControlDirectoryActionPaths } from './source-control/listing/directory-action-paths'
 
 function entry(partial: Partial<GitStatusEntry> & { path: string }): GitStatusEntry {
   return {
@@ -206,5 +207,31 @@ describe('buildSourceControlTree', () => {
     expect(directory?.area).toBe('unstaged')
     expect(file?.key).toBe('staged::src/resolved.ts')
     expect(file?.area).toBe('staged')
+  })
+
+  it('keeps real file areas and includes tracked and untracked directory discards', () => {
+    const tree = applyGitStatusEntryAreasToSourceControlTree(
+      buildGitStatusSourceControlTree('unstaged', [
+        entry({ path: 'src/changed.ts' }),
+        entry({ area: 'untracked', path: 'src/new.ts', status: 'untracked' })
+      ])
+    )
+    const directory = tree.find((node) => node.type === 'directory')
+    if (!directory || directory.type !== 'directory') {
+      throw new Error('directory not found')
+    }
+
+    expect(
+      flattenSourceControlTree(tree, new Set())
+        .filter((node) => node.type === 'file')
+        .map((node) => [node.key, node.area])
+    ).toEqual([
+      ['unstaged::src/changed.ts', 'unstaged'],
+      ['untracked::src/new.ts', 'untracked']
+    ])
+    expect(getSourceControlDirectoryActionPaths(directory).discardPaths).toEqual([
+      'src/changed.ts',
+      'src/new.ts'
+    ])
   })
 })

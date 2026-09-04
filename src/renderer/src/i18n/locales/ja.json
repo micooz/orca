@@ -6197,7 +6197,11 @@
           "compareAgainstUpstreamTitle": "既定の比較ベース",
           "compareAgainstUpstreamDescription": "ソース管理がコミット済み変更の比較に既定で使うベースを選択します。ブランチの upstream は現在のブランチに自動的に追従し、upstream がない場合はリポジトリの既定ブランチにフォールバックします。比較ベースは各ワークツリーの Git パネルからワークツリーごとに変更できます。Pull Request やリベースの対象は変更されません。",
           "compareBaseRepositoryDefault": "リポジトリ既定",
-          "compareBaseBranchUpstream": "ブランチの upstream"
+          "compareBaseBranchUpstream": "ブランチの upstream",
+          "mergeUntrackedFilesTitle": "未追跡ファイルを変更に統合",
+          "mergeUntrackedFilesDescription": "未追跡ファイルを独立したグループではなく「変更」グループに表示します。",
+          "showCommittedChangesTitle": "コミット済みの変更を表示",
+          "showCommittedChangesDescription": "現在のブランチと選択したベースとの間で、コミットによって変更されたファイルを表示します。"
         },
         "HiddenExperimentalGroup": {
           "7c4e18d2f6": "このマシンで太字グリッチのキャプチャジェスチャーを有効にします。{{samplingShortcut}} でサンプリングバーストを開始し、{{captureShortcut}} でペインの証拠をディスクに保存します。",
@@ -8480,6 +8484,13 @@
             "localChanges": "ローカルの変更",
             "originMaster": "origin/master",
             "committedChanges": "コミット済みの変更",
+            "mergeUntrackedFilesTitle": "未追跡ファイルを変更に統合",
+            "mergeUntrackedFilesDescription": "未追跡ファイルを独立したグループではなく「変更」グループに表示します。",
+            "showCommittedChangesTitle": "コミット済みの変更を表示",
+            "showCommittedChangesDescription": "現在のブランチと選択したベースとの間で、コミットによって変更されたファイルを表示します。",
+            "untrackedFiles": "未追跡ファイル",
+            "changesGroup": "変更グループ",
+            "branchCompare": "ブランチ比較",
             "defaultCompareBase": "既定の比較ベース",
             "defaultBranch": "デフォルトブランチ",
             "repositoryDefault": "リポジトリ既定",
@@ -11212,7 +11223,9 @@
                   "40e9357b2a": "これにより、HEAD からファイルが復元され、削除が破棄されます。これを元に戻すことはできません。",
                   "5c0bdbc4cb": "「{{value0}}」を復元しますか?",
                   "d97bf697c9": "これにより、このファイルは完全に削除されます。これを元に戻すことはできません。",
-                  "96c772bee9": "「{{value0}}」を削除しますか?"
+                  "96c772bee9": "「{{value0}}」を削除しますか?",
+                  "mixedTitle": "変更を破棄して未追跡ファイルを削除しますか？",
+                  "mixedDescription": "追跡対象の変更を元に戻し、未追跡ファイルを完全に削除します。この操作は取り消せません。"
                 },
                 "dialog": {
                   "3bc61dc989": "キャンセル",

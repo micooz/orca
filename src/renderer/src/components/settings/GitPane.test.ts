@@ -182,6 +182,13 @@ describe('GitPane', () => {
     expect(matchesSettingsSearch('group order', getGitPaneSearchEntries())).toBe(true)
   })
 
+  it('renders and indexes Source Control visibility settings', () => {
+    expect(renderGitPane('untracked files')).toContain('Merge Untracked Files into Changes')
+    expect(renderGitPane('committed changes')).toContain('Show Committed Changes')
+    expect(matchesSettingsSearch('changes group', getGitPaneSearchEntries())).toBe(true)
+    expect(matchesSettingsSearch('branch compare', getGitPaneSearchEntries())).toBe(true)
+  })
+
   it('renders the default compare base setting in Git settings', () => {
     const markup = renderGitPane('compare base')
 

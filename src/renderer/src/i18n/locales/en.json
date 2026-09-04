@@ -7216,7 +7216,11 @@
           "compareAgainstUpstreamTitle": "Default Compare Base",
           "compareAgainstUpstreamDescription": "Choose which base Source Control uses by default for committed-change comparisons. Branch upstream follows the current branch automatically and falls back to the repository default branch when no upstream exists. You can still change the compare base per worktree from that worktree's Git panel. Pull Request and rebase targets don't change.",
           "compareBaseRepositoryDefault": "Repository default",
-          "compareBaseBranchUpstream": "Branch upstream"
+          "compareBaseBranchUpstream": "Branch upstream",
+          "mergeUntrackedFilesTitle": "Merge Untracked Files into Changes",
+          "mergeUntrackedFilesDescription": "Show untracked files in the Changes group instead of a separate Untracked Files group.",
+          "showCommittedChangesTitle": "Show Committed Changes",
+          "showCommittedChangesDescription": "Show files changed by commits on the current branch compared with the selected base."
         },
         "HiddenExperimentalGroup": {
           "7c4e18d2f6": "Arms the bold-glitch capture gestures on this machine: {{samplingShortcut}} starts a sampling burst; {{captureShortcut}} captures pane evidence to disk.",
@@ -9549,7 +9553,14 @@
             "upstream": "upstream",
             "localChanges": "local changes",
             "originMaster": "origin/master",
-            "committedChanges": "committed changes"
+            "committedChanges": "committed changes",
+            "mergeUntrackedFilesTitle": "Merge Untracked Files into Changes",
+            "mergeUntrackedFilesDescription": "Show untracked files in the Changes group instead of a separate Untracked Files group.",
+            "showCommittedChangesTitle": "Show Committed Changes",
+            "showCommittedChangesDescription": "Show files changed by commits on the current branch compared with the selected base.",
+            "untrackedFiles": "untracked files",
+            "changesGroup": "changes group",
+            "branchCompare": "branch compare"
           }
         },
         "input": {
@@ -12543,7 +12554,9 @@
                   "40e9357b2a": "This will restore the file from HEAD and discard the deletion. This cannot be undone.",
                   "5c0bdbc4cb": "Restore \"{{value0}}\"?",
                   "d97bf697c9": "This will permanently delete this file. This cannot be undone.",
-                  "96c772bee9": "Delete \"{{value0}}\"?"
+                  "96c772bee9": "Delete \"{{value0}}\"?",
+                  "mixedTitle": "Discard changes and delete untracked files?",
+                  "mixedDescription": "This will revert tracked changes and permanently delete untracked files. This cannot be undone."
                 },
                 "dialog": {
                   "3bc61dc989": "Cancel",

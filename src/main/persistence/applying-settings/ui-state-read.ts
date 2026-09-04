@@ -27,6 +27,7 @@ import {
   normalizeProjectOrderBy,
   normalizeRightSidebarExplorerView,
   normalizeRightSidebarTab,
+  normalizeSourceControlCollapsedSectionsByWorktree,
   normalizeShowDotfilesByWorktree,
   normalizeSortBy
 } from './ui-selection-normalization'
@@ -67,6 +68,9 @@ export function getPersistedUI(
     manualRepoOrder: normalizeManualRepoOrder(state.ui?.manualRepoOrder),
     browserDefaultZoomLevel: normalizeBrowserPageZoomLevel(state.ui?.browserDefaultZoomLevel),
     showDotfilesByWorktree: normalizeShowDotfilesByWorktree(state.ui?.showDotfilesByWorktree),
+    sourceControlCollapsedSectionsByWorktree: normalizeSourceControlCollapsedSectionsByWorktree(
+      state.ui?.sourceControlCollapsedSectionsByWorktree
+    ),
     featureTipsSeenIds: normalizeFeatureTipIds(state.ui?.featureTipsSeenIds),
     contextualToursSeenIds: normalizeContextualTourIds(state.ui?.contextualToursSeenIds),
     featureInteractions: normalizeFeatureInteractions(state.ui?.featureInteractions),

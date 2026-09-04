@@ -1,12 +1,27 @@
 import { normalizeSourceControlGroupOrder } from '../../../../../../shared/source-control-group-order'
 import type { GitStatusEntry } from '../../../../../../shared/git-status-types'
 import type { SourceControlGroupOrder } from '../../../../../../shared/ui-chrome-types'
+import { compareGitStatusEntries } from '../../source-control-status-sort'
 
 export const SOURCE_CONTROL_AREAS = ['unstaged', 'staged', 'untracked'] as const
 export type SourceControlSectionArea = (typeof SOURCE_CONTROL_AREAS)[number]
 export type SourceControlDisplaySectionId = SourceControlSectionArea | 'conflicts'
 
 export type SourceControlEntryGroups = Record<SourceControlSectionArea, GitStatusEntry[]>
+
+export function mergeUntrackedIntoSourceControlChanges(
+  groups: SourceControlEntryGroups,
+  enabled: boolean
+): SourceControlEntryGroups {
+  if (!enabled || groups.untracked.length === 0) {
+    return groups
+  }
+  return {
+    ...groups,
+    unstaged: [...groups.unstaged, ...groups.untracked].sort(compareGitStatusEntries),
+    untracked: []
+  }
+}
 
 export type SourceControlDisplaySection = {
   id: SourceControlDisplaySectionId

@@ -6208,7 +6208,11 @@
           "compareAgainstUpstreamTitle": "默认对比基准",
           "compareAgainstUpstreamDescription": "选择源代码管理在比较已提交变更时默认使用的基准。分支上游会自动跟随当前分支；如果没有上游，则回退到仓库默认分支。你仍然可以在对应 worktree 的 Git 面板中按 worktree 更改对比基准。Pull Request 和变基目标不会改变。",
           "compareBaseRepositoryDefault": "仓库默认",
-          "compareBaseBranchUpstream": "分支上游"
+          "compareBaseBranchUpstream": "分支上游",
+          "mergeUntrackedFilesTitle": "将未跟踪文件合并到更改中",
+          "mergeUntrackedFilesDescription": "在“更改”分组中展示未跟踪文件，而不是单独显示“未跟踪文件”分组。",
+          "showCommittedChangesTitle": "显示已提交的更改",
+          "showCommittedChangesDescription": "显示当前分支与所选对比基准之间由提交产生的文件更改。"
         },
         "HiddenExperimentalGroup": {
           "7c4e18d2f6": "在本机启用粗体故障捕获手势：{{samplingShortcut}} 开始采样突发；{{captureShortcut}} 将窗格证据捕获到磁盘。",
@@ -8494,7 +8498,14 @@
             "defaultCompareBase": "默认对比基准",
             "defaultBranch": "默认分支",
             "repositoryDefault": "仓库默认",
-            "branchUpstream": "分支上游"
+            "branchUpstream": "分支上游",
+            "mergeUntrackedFilesTitle": "将未跟踪文件合并到更改中",
+            "mergeUntrackedFilesDescription": "在“更改”分组中展示未跟踪文件，而不是单独显示“未跟踪文件”分组。",
+            "showCommittedChangesTitle": "显示已提交的更改",
+            "showCommittedChangesDescription": "显示当前分支与所选对比基准之间由提交产生的文件更改。",
+            "untrackedFiles": "未跟踪文件",
+            "changesGroup": "更改分组",
+            "branchCompare": "分支对比"
           }
         },
         "input": {
@@ -11268,7 +11279,9 @@
                   "40e9357b2a": "这将从 HEAD 恢复文件并放弃删除。此操作无法撤销。",
                   "5c0bdbc4cb": "恢复“{{value0}}”？",
                   "d97bf697c9": "这将永久删除该文件。此操作无法撤销。",
-                  "96c772bee9": "删除“{{value0}}”？"
+                  "96c772bee9": "删除“{{value0}}”？",
+                  "mixedTitle": "放弃更改并删除未跟踪文件？",
+                  "mixedDescription": "这将还原已跟踪文件的更改，并永久删除未跟踪文件。此操作无法撤销。"
                 },
                 "dialog": {
                   "3bc61dc989": "取消",

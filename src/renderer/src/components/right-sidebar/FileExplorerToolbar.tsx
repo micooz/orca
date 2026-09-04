@@ -1,10 +1,19 @@
 import React from 'react'
-import { Ellipsis, ListCollapse, Loader2, RefreshCw } from 'lucide-react'
+import {
+  Ellipsis,
+  List,
+  ListCollapse,
+  ListRestart,
+  ListTree,
+  Loader2,
+  RefreshCw
+} from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
+  DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
@@ -12,6 +21,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { WorktreeOpenInMenuItems } from '@/components/sidebar/WorktreeOpenInMenu'
 import { translate } from '@/i18n/i18n'
 import { cn } from '@/lib/utils'
+import type { FileSearchViewMode } from '../../../../shared/ui-chrome-types'
 
 type FileExplorerToolbarProps = {
   repoName: string
@@ -24,7 +34,12 @@ type FileExplorerToolbarProps = {
   }
   canRefresh: boolean
   canCollapseAll: boolean
+  collapseAllAction?: 'collapse' | 'expand'
   onCollapseAll: () => void
+  onExpandAll?: () => void
+  showFileSearchViewModeToggle?: boolean
+  fileSearchViewMode?: FileSearchViewMode
+  onToggleFileSearchViewMode?: () => void
   showGitIgnoredFilesToggle: boolean
   showGitIgnoredFiles: boolean
   onToggleGitIgnoredFiles: () => void
@@ -39,13 +54,22 @@ export function FileExplorerToolbar({
   refresh,
   canRefresh,
   canCollapseAll,
+  collapseAllAction = 'collapse',
   onCollapseAll,
+  onExpandAll,
+  showFileSearchViewModeToggle = false,
+  fileSearchViewMode = 'list',
+  onToggleFileSearchViewMode,
   showGitIgnoredFilesToggle,
   showGitIgnoredFiles,
   onToggleGitIgnoredFiles,
   showDotfiles,
   onToggleDotfiles
 }: FileExplorerToolbarProps): React.JSX.Element {
+  const collapseAllLabel =
+    collapseAllAction === 'expand'
+      ? translate('auto.components.right.sidebar.FileExplorerToolbar.expandAll', 'Expand All')
+      : translate('auto.components.right.sidebar.FileExplorerToolbar.6026b16950', 'Collapse All')
   return (
     <div className="flex h-8 min-h-8 items-center gap-2 border-b border-border px-2">
       <span
@@ -64,10 +88,7 @@ export function FileExplorerToolbar({
               'text-muted-foreground hover:text-foreground',
               !canCollapseAll && 'cursor-not-allowed opacity-50'
             )}
-            aria-label={translate(
-              'auto.components.right.sidebar.FileExplorerToolbar.6026b16950',
-              'Collapse All'
-            )}
+            aria-label={collapseAllLabel}
             aria-disabled={!canCollapseAll}
             // Why: native disabled buttons suppress Radix tooltip triggers in Chromium.
             onClick={(event) => {
@@ -75,17 +96,22 @@ export function FileExplorerToolbar({
                 event.preventDefault()
                 return
               }
-              onCollapseAll()
+              if (collapseAllAction === 'expand') {
+                onExpandAll?.()
+              } else {
+                onCollapseAll()
+              }
             }}
           >
-            <ListCollapse className="size-3" />
+            {collapseAllAction === 'expand' ? (
+              <ListRestart className="size-3" />
+            ) : (
+              <ListCollapse className="size-3" />
+            )}
           </Button>
         </TooltipTrigger>
         <TooltipContent side="bottom" sideOffset={4}>
-          {translate(
-            'auto.components.right.sidebar.FileExplorerToolbar.6026b16950',
-            'Collapse All'
-          )}
+          {collapseAllLabel}
         </TooltipContent>
       </Tooltip>
       <Tooltip>
@@ -152,6 +178,27 @@ export function FileExplorerToolbar({
           </TooltipContent>
         </Tooltip>
         <DropdownMenuContent align="end" className="min-w-[12rem]">
+          {showFileSearchViewModeToggle ? (
+            <>
+              <DropdownMenuItem onSelect={onToggleFileSearchViewMode}>
+                {fileSearchViewMode === 'tree' ? (
+                  <List className="size-3.5" />
+                ) : (
+                  <ListTree className="size-3.5" />
+                )}
+                {fileSearchViewMode === 'tree'
+                  ? translate(
+                      'auto.components.right.sidebar.FileExplorerToolbar.viewAsList',
+                      'View as list'
+                    )
+                  : translate(
+                      'auto.components.right.sidebar.FileExplorerToolbar.viewAsTree',
+                      'View as tree'
+                    )}
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+            </>
+          ) : null}
           <DropdownMenuCheckboxItem checked={showDotfiles} onCheckedChange={onToggleDotfiles}>
             {translate(
               'auto.components.right.sidebar.FileExplorerToolbar.78f133232c',

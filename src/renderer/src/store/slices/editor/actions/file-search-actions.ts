@@ -40,6 +40,7 @@ export function createFileSearchActions(
               resultOwner: null,
               loading: false,
               collapsedFiles: new Set(),
+              collapsedDirectories: new Set(),
               seedRequestId: (current.seedRequestId ?? 0) + 1
             }
           }
@@ -58,6 +59,7 @@ export function createFileSearchActions(
               resultOwner: null,
               loading: false,
               collapsedFiles: new Set(),
+              collapsedDirectories: new Set(),
               seedRequestId: (current.seedRequestId ?? 0) + 1
             }
           }
@@ -112,7 +114,8 @@ export function createFileSearchActions(
               results: null,
               resultOwner: null,
               loading: false,
-              collapsedFiles: new Set()
+              collapsedFiles: new Set(),
+              collapsedDirectories: new Set()
             }
           }
         }

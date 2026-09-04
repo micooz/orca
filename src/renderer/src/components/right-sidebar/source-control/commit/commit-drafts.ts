@@ -1,9 +1,10 @@
 import type { SourceControlViewMode } from '../../../../../../shared/ui-chrome-types'
+import { normalizeListTreeViewMode } from '../../../../../../shared/list-tree-view-mode'
 
 export type CommitDraftsByWorktree = Record<string, string>
 
 export function normalizeSourceControlViewMode(value: unknown): SourceControlViewMode {
-  return value === 'tree' || value === 'list' ? value : 'list'
+  return normalizeListTreeViewMode(value)
 }
 
 export function readCommitDraftForWorktree(

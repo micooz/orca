@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest'
-import { Ellipsis, ListCollapse, Loader2, RefreshCw } from 'lucide-react'
+import { Ellipsis, ListCollapse, ListRestart, ListTree, Loader2, RefreshCw } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { DropdownMenuCheckboxItem } from '@/components/ui/dropdown-menu'
+import { DropdownMenuCheckboxItem, DropdownMenuItem } from '@/components/ui/dropdown-menu'
 import { WorktreeOpenInMenuItems } from '@/components/sidebar/WorktreeOpenInMenu'
 import { FileExplorerToolbar } from './FileExplorerToolbar'
 import { visit, type ReactElementLike } from './file-explorer-element-tree-test-harness'
@@ -29,6 +29,29 @@ function findCollapseAllButton(node: unknown): ReactElementLike {
   if (!found) {
     throw new Error('collapse all button not found')
   }
+  return found
+}
+
+function findButtonByLabel(node: unknown, label: string): ReactElementLike {
+  let found: ReactElementLike | null = null
+  visit(node, (entry) => {
+    if (entry.type === Button && entry.props['aria-label'] === label) {
+      found = entry
+    }
+  })
+  if (!found) {
+    throw new Error(`${label} button not found`)
+  }
+  return found
+}
+
+function findViewModeItem(node: unknown): ReactElementLike | null {
+  let found: ReactElementLike | null = null
+  visit(node, (entry) => {
+    if (entry.type === DropdownMenuItem) {
+      found = entry
+    }
+  })
   return found
 }
 
@@ -270,6 +293,41 @@ describe('FileExplorerToolbar', () => {
 
     expect(preventDefault).toHaveBeenCalledTimes(1)
     expect(onCollapseAll).not.toHaveBeenCalled()
+  })
+
+  it('switches an all-collapsed search tree back to expanded', () => {
+    const onExpandAll = vi.fn()
+    const element = makeToolbar({
+      canCollapseAll: true,
+      collapseAllAction: 'expand',
+      onExpandAll
+    })
+    const button = findButtonByLabel(element, 'Expand All')
+
+    ;(button.props.onClick as () => void)()
+
+    expect(onExpandAll).toHaveBeenCalledTimes(1)
+    expect(hasIcon(button, ListRestart)).toBe(true)
+  })
+
+  it('shows the content-search view toggle only when requested', () => {
+    expect(findViewModeItem(makeToolbar())).toBeNull()
+
+    const onToggle = vi.fn()
+    const element = makeToolbar({
+      showFileSearchViewModeToggle: true,
+      fileSearchViewMode: 'list',
+      onToggleFileSearchViewMode: onToggle
+    })
+    const item = findViewModeItem(element)
+    if (!item) {
+      throw new Error('view mode item not found')
+    }
+    ;(item.props.onSelect as () => void)()
+
+    expect(item.props.children).toContain('View as tree')
+    expect(hasIcon(item, ListTree)).toBe(true)
+    expect(onToggle).toHaveBeenCalledTimes(1)
   })
 
   it('puts the git ignored visibility toggle in the overflow menu', () => {

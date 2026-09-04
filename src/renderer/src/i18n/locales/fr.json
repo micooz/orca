@@ -11480,7 +11480,10 @@
             "d95e30fe28": "Actualiser l'explorateur",
             "6026b16950": "Tout réduire",
             "693cbeadd0": "Recherche",
-            "c1f3f3ec70": "Rechercher dans le contenu des fichiers"
+            "c1f3f3ec70": "Rechercher dans le contenu des fichiers",
+            "expandAll": "Tout développer",
+            "viewAsList": "Afficher en liste",
+            "viewAsTree": "Afficher sous forme d’arborescence"
           },
           "FileExplorerTreeStatus": {
             "ce03835e1f": "Aucun fichier dans cet espace de travail",

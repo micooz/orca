@@ -10,9 +10,14 @@ const DEFAULT_FILE_SEARCH_STATE = {
   results: null,
   resultOwner: null,
   loading: false,
-  collapsedFiles: new Set<string>()
+  collapsedFiles: new Set<string>(),
+  collapsedDirectories: new Set<string>()
 } satisfies Omit<FileSearchWorktreeState, 'seedRequestId' | 'focusRequestId'>
 
 export function defaultFileSearchState(): FileSearchWorktreeState {
-  return { ...DEFAULT_FILE_SEARCH_STATE, collapsedFiles: new Set<string>() }
+  return {
+    ...DEFAULT_FILE_SEARCH_STATE,
+    collapsedFiles: new Set<string>(),
+    collapsedDirectories: new Set<string>()
+  }
 }

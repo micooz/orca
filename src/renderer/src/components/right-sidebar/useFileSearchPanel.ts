@@ -7,11 +7,13 @@ import type {
   SearchMatch,
   SearchResult
 } from '../../../../shared/code-search-types'
-import { buildSearchRows } from './search-rows'
+import { buildSearchRowProjection } from './search-rows'
 import { cancelRevealFrame, openMatchResult } from './search-match-open'
 import type { SearchQueryRowProps } from './SearchQueryRow'
 import type { SearchFiltersProps } from './SearchFilters'
 import { useFileSearchRunner } from './useFileSearchRunner'
+import type { FileSearchViewMode } from '../../../../shared/ui-chrome-types'
+import { useFileSearchCollapse } from './use-file-search-collapse'
 
 const EMPTY_COLLAPSED_FILES = new Set<string>()
 
@@ -24,15 +26,23 @@ export type FileSearchPanelModel = {
     hasCommittedResults: boolean
     query: string
     loading: boolean
-    rows: ReturnType<typeof buildSearchRows>
+    rows: ReturnType<typeof buildSearchRowProjection>['rows']
     scrollRef: React.RefObject<HTMLDivElement | null>
     onToggleCollapsedFile: (filePath: string) => void
+    onToggleCollapsedDirectory: (directoryKey: string) => void
     onMatchClick: (fileResult: SearchFileResult, match: SearchMatch) => void
   }
   focusQueryInput: () => void
+  canToggleAllResults: boolean
+  allResultsCollapsed: boolean
+  collapseAllResults: () => void
+  expandAllResults: () => void
 }
 
-export function useFileSearchPanel(explorerView: 'files' | 'search'): FileSearchPanelModel {
+export function useFileSearchPanel(
+  explorerView: 'files' | 'search',
+  viewMode: FileSearchViewMode
+): FileSearchPanelModel {
   const activeWorktree = useActiveWorktree()
   const activeWorktreeId = useAppStore((s) => s.activeWorktreeId)
   const openFile = useAppStore((s) => s.openFile)
@@ -51,6 +61,7 @@ export function useFileSearchPanel(explorerView: 'files' | 'search'): FileSearch
   const fileSearchResultOwner = searchState?.resultOwner ?? null
   const fileSearchLoading = searchState?.loading ?? false
   const fileSearchCollapsedFiles = searchState?.collapsedFiles ?? EMPTY_COLLAPSED_FILES
+  const fileSearchCollapsedDirectories = searchState?.collapsedDirectories ?? EMPTY_COLLAPSED_FILES
   const fileSearchSeedRequestId = searchState?.seedRequestId
   const fileSearchFocusRequestId = searchState?.focusRequestId
 
@@ -141,14 +152,30 @@ export function useFileSearchPanel(explorerView: 'files' | 'search'): FileSearch
     [fileSearchResultOwner, fileSearchResults]
   )
   const deferredSearchResults = useDeferredValue(committedSearchResults)
-  const searchRows = useMemo(
+  const searchProjection = useMemo(
     () =>
-      buildSearchRows(
+      buildSearchRowProjection(
         fileSearchQuery.trim() && worktreePath ? deferredSearchResults.results : null,
-        fileSearchCollapsedFiles
+        viewMode,
+        fileSearchCollapsedFiles,
+        fileSearchCollapsedDirectories
       ),
-    [deferredSearchResults.results, fileSearchCollapsedFiles, fileSearchQuery, worktreePath]
+    [
+      deferredSearchResults.results,
+      fileSearchCollapsedDirectories,
+      fileSearchCollapsedFiles,
+      fileSearchQuery,
+      viewMode,
+      worktreePath
+    ]
   )
+
+  const searchCollapse = useFileSearchCollapse({
+    projection: searchProjection,
+    collapsedFiles: fileSearchCollapsedFiles,
+    collapsedDirectories: fileSearchCollapsedDirectories,
+    updateSearchState: updateActiveSearchState
+  })
 
   useEffect(() => {
     if (!activeWorktreeId || fileSearchSeedRequestId === undefined) {
@@ -284,11 +311,16 @@ export function useFileSearchPanel(explorerView: 'files' | 'search'): FileSearch
       hasCommittedResults: fileSearchResults !== null,
       query: fileSearchQuery,
       loading: fileSearchLoading,
-      rows: searchRows,
+      rows: searchProjection.rows,
       scrollRef: resultsScrollRef,
       onToggleCollapsedFile: toggleActiveCollapsedFile,
+      onToggleCollapsedDirectory: searchCollapse.toggleDirectory,
       onMatchClick: handleMatchClick
     },
-    focusQueryInput
+    focusQueryInput,
+    canToggleAllResults: searchCollapse.canToggleAll,
+    allResultsCollapsed: searchCollapse.allCollapsed,
+    collapseAllResults: searchCollapse.collapseAll,
+    expandAllResults: searchCollapse.expandAll
   }
 }

@@ -13,6 +13,7 @@ import { normalizeTaskProviderSettings } from '../../../shared/task-providers'
 import { normalizeOpenInApplications } from '../../../shared/open-in-applications'
 import { normalizeTerminalShortcutPolicy } from '../../../shared/keybindings'
 import { normalizeSourceControlGroupOrder } from '../../../shared/source-control-group-order'
+import { normalizeListTreeViewMode } from '../../../shared/list-tree-view-mode'
 import { normalizeAppIconId } from '../../../shared/app-icon'
 import { normalizeUiLanguage } from '../../../shared/ui-language'
 import { normalizeWorktreeVisibilityDefaults } from '../../../shared/external-worktree-visibility'
@@ -161,6 +162,9 @@ export function updateSettings(
     sanitizedUpdates.sourceControlGroupOrder = normalizeSourceControlGroupOrder(
       updates.sourceControlGroupOrder
     )
+  }
+  if ('fileSearchViewMode' in updates) {
+    sanitizedUpdates.fileSearchViewMode = normalizeListTreeViewMode(updates.fileSearchViewMode)
   }
   if ('appIcon' in updates) {
     sanitizedUpdates.appIcon = normalizeAppIconId(updates.appIcon)

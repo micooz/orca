@@ -18,6 +18,10 @@ import { CLOSE_ALL_CONTEXT_MENUS_EVENT } from '@/components/tab-bar/SortableTab'
 import type { RuntimeFileOperationArgs } from '@/runtime/runtime-file-client'
 import { createMultiSelectDragGhost } from './file-explorer-multi-drag-image'
 import { FileExplorerRowContextMenu } from './file-explorer-row-context-menu'
+import {
+  FILE_EXPLORER_ROW_CLASS_NAME,
+  FILE_EXPLORER_ROW_HOVER_CLASS_NAME
+} from './file-explorer-row-presentation'
 
 // ─── File / Folder Row with Context Menu ─────────────────────────
 
@@ -132,8 +136,8 @@ export function FileExplorerRow({
           data-file-explorer-row=""
           data-selected={isSelected ? 'true' : undefined}
           className={cn(
-            'flex w-full items-center gap-1 rounded-sm px-2 py-1 text-left text-xs transition-colors',
-            !isSelected && 'hover:bg-accent hover:text-foreground',
+            FILE_EXPLORER_ROW_CLASS_NAME,
+            !isSelected && FILE_EXPLORER_ROW_HOVER_CLASS_NAME,
             isSelected && 'text-accent-foreground',
             isFlashing && 'bg-amber-400/20 ring-1 ring-inset ring-amber-400/70'
           )}

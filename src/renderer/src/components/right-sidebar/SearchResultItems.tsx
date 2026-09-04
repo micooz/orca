@@ -14,6 +14,15 @@ import {
 import { normalizeSearchFileMatchCount } from '../../../../shared/search-match-count'
 import type { SearchFileResult, SearchMatch } from '../../../../shared/code-search-types'
 import { translate } from '@/i18n/i18n'
+import {
+  PATH_TREE_DIRECTORY_PADDING_PX,
+  PATH_TREE_FILE_PADDING_PX,
+  PATH_TREE_INDENT_PX
+} from './path-tree-row-layout'
+import {
+  FILE_EXPLORER_ROW_CLASS_NAME,
+  FILE_EXPLORER_ROW_HOVER_CLASS_NAME
+} from './file-explorer-row-presentation'
 
 // ─── Toggle Button ────────────────────────────────────────
 export function ToggleButton({
@@ -55,11 +64,15 @@ export function ToggleButton({
 export function FileResultRow({
   fileResult,
   onToggleCollapse,
-  collapsed
+  collapsed,
+  depth = 0,
+  showParentPath = true
 }: {
   fileResult: SearchFileResult
   onToggleCollapse: () => void
   collapsed: boolean
+  depth?: number
+  showParentPath?: boolean
 }): React.JSX.Element {
   const fileName = basename(fileResult.relativePath)
   const parentDir = dirname(fileResult.relativePath)
@@ -68,17 +81,25 @@ export function FileResultRow({
   const matchCount = normalizeSearchFileMatchCount(fileResult)
 
   return (
-    <div className="pt-1.5">
+    <div>
       {/* File header with context menu */}
       <TooltipProvider delayDuration={400}>
         <Tooltip>
           <ContextMenu>
             <ContextMenuTrigger asChild>
               <TooltipTrigger asChild>
-                <Button
+                <button
                   type="button"
-                  variant="ghost"
-                  className="h-auto w-full justify-start gap-1 rounded-none px-2 py-0.5 text-left group"
+                  className={cn(
+                    FILE_EXPLORER_ROW_CLASS_NAME,
+                    FILE_EXPLORER_ROW_HOVER_CLASS_NAME,
+                    'pr-2 group'
+                  )}
+                  style={{
+                    paddingLeft: showParentPath
+                      ? '8px'
+                      : `${depth * PATH_TREE_INDENT_PX + PATH_TREE_DIRECTORY_PADDING_PX}px`
+                  }}
                   onClick={onToggleCollapse}
                 >
                   <ChevronRight
@@ -93,7 +114,7 @@ export function FileResultRow({
                   <div className="min-w-0 flex-1 text-xs">
                     <span className="min-w-0 block truncate">
                       <span className="text-foreground">{fileName}</span>
-                      {dirPath && (
+                      {showParentPath && dirPath && (
                         <span className="ml-1.5 text-[11px] text-muted-foreground">{dirPath}</span>
                       )}
                     </span>
@@ -101,7 +122,7 @@ export function FileResultRow({
                   <span className="text-[10px] text-muted-foreground flex-shrink-0 bg-muted/80 rounded-full px-1.5">
                     {matchCount}
                   </span>
-                </Button>
+                </button>
               </TooltipTrigger>
             </ContextMenuTrigger>
             <ContextMenuContent>
@@ -132,11 +153,13 @@ export function FileResultRow({
 export function MatchResultRow({
   match,
   relativePath,
-  onClick
+  onClick,
+  depth = 0
 }: {
   match: SearchMatch
   relativePath: string
   onClick: () => void
+  depth?: number
 }): React.JSX.Element {
   // Highlight the matched text within the line
   const parts = useMemo(() => {
@@ -178,7 +201,11 @@ export function MatchResultRow({
         <Button
           type="button"
           variant="ghost"
-          className="min-h-[18px] h-auto w-full justify-start gap-1 rounded-none py-px pr-2 pl-7 text-left"
+          className="min-h-[18px] h-auto w-full justify-start gap-1 rounded-none py-px pr-2 text-left"
+          style={{
+            paddingLeft:
+              depth === 0 ? '28px' : `${depth * PATH_TREE_INDENT_PX + PATH_TREE_FILE_PADDING_PX}px`
+          }}
           onMouseDown={(event) => {
             // Why: clicking a result should move focus into the opened editor.
             // If the sidebar button takes focus first, the browser can restore

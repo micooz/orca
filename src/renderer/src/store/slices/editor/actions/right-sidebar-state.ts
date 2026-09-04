@@ -110,6 +110,7 @@ export function createRightSidebarState(set: EditorSet, _get: EditorGet): RightS
                 resultOwner: null,
                 loading: false,
                 collapsedFiles: new Set<string>(),
+                collapsedDirectories: new Set<string>(),
                 seedRequestId: (current.seedRequestId ?? 0) + 1
               }
             : {}),

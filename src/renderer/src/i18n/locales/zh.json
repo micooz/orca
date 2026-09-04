@@ -10494,7 +10494,10 @@
             "d95e30fe28": "刷新文件管理器",
             "6026b16950": "全部折叠",
             "693cbeadd0": "搜索",
-            "c1f3f3ec70": "搜索文件内容"
+            "c1f3f3ec70": "搜索文件内容",
+            "expandAll": "全部展开",
+            "viewAsList": "以列表查看",
+            "viewAsTree": "以树形查看"
           },
           "FileExplorerTreeStatus": {
             "ce03835e1f": "此工作区中没有文件",

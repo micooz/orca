@@ -39,6 +39,7 @@ export function createSettings(overrides: Partial<GlobalSettings> = {}): GlobalS
   const appFontFamily = overrides.appFontFamily ?? 'Geist'
   const agentStatusHooksEnabled = overrides.agentStatusHooksEnabled ?? true
   const tabAutoGenerateTitle = overrides.tabAutoGenerateTitle ?? false
+  const fileSearchViewMode = overrides.fileSearchViewMode ?? 'list'
   return {
     workspaceDir: testState.fakeHomeDir,
     nestWorkspaces: false,
@@ -156,7 +157,8 @@ export function createSettings(overrides: Partial<GlobalSettings> = {}): GlobalS
     leftSidebarAppearanceMode: overrides.leftSidebarAppearanceMode ?? 'default',
     appFontFamily,
     agentStatusHooksEnabled,
-    tabAutoGenerateTitle
+    tabAutoGenerateTitle,
+    fileSearchViewMode
   }
 }
 

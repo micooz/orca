@@ -11900,7 +11900,10 @@
             "d95e30fe28": "Refresh Explorer",
             "6026b16950": "Collapse All",
             "693cbeadd0": "Search",
-            "c1f3f3ec70": "Search file contents"
+            "c1f3f3ec70": "Search file contents",
+            "expandAll": "Expand All",
+            "viewAsList": "View as list",
+            "viewAsTree": "View as tree"
           },
           "FileExplorerTreeStatus": {
             "ce03835e1f": "No files in this workspace",

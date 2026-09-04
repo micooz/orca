@@ -27,12 +27,17 @@ import { useFileExplorerNameFilter } from './use-file-explorer-name-filter'
 import { useFileExplorerTreePaneState } from './use-file-explorer-tree-pane-state'
 import { translate } from '@/i18n/i18n'
 import type { RightSidebarExplorerView } from '../../../../shared/ui-chrome-types'
+import { normalizeListTreeViewMode } from '../../../../shared/list-tree-view-mode'
 
 function FileExplorerFiles(): React.JSX.Element {
   const explorerView = useAppStore((s) => s.rightSidebarExplorerView)
   const showRightSidebarFiles = useAppStore((s) => s.showRightSidebarFiles)
   const showRightSidebarSearch = useAppStore((s) => s.showRightSidebarSearch)
-  const searchPanel = useFileSearchPanel(explorerView)
+  const fileSearchViewMode = useAppStore((s) =>
+    normalizeListTreeViewMode(s.settings?.fileSearchViewMode)
+  )
+  const updateSettings = useAppStore((s) => s.updateSettings)
+  const searchPanel = useFileSearchPanel(explorerView, fileSearchViewMode)
   const activeWorktreeId = useAppStore((s) => s.activeWorktreeId)
   const activeWorktree = useActiveWorktree()
   const activeRepo = useRepoById(activeWorktree?.repoId ?? null)
@@ -110,15 +115,53 @@ function FileExplorerFiles(): React.JSX.Element {
           : expanded,
     [expanded, hasNameFilter, nameFilterExpandedPaths]
   )
+  const hasVisibleCollapsedNameFilterDir = useMemo(
+    () =>
+      hasNameFilter &&
+      [...nameFilterCollapsedPaths].some((dirPath) => rowProjection.hasPath(dirPath)),
+    [hasNameFilter, nameFilterCollapsedPaths, rowProjection]
+  )
   const visibleRowCount = rowProjection.getVisibleCount()
   const manualRefresh = useFileExplorerManualRefresh(tree.refreshTree)
-  const canCollapseAll = isFilesViewActive && !hasNameFilter && expanded.size > 0
+  const canCollapseAll = isFilesViewActive
+    ? hasNameFilter
+      ? nameFilterExpandedPaths.size > 0 || hasVisibleCollapsedNameFilterDir
+      : expanded.size > 0
+    : searchPanel.canToggleAllResults
   const handleCollapseAll = useCallback(() => {
-    if (!activeWorktreeId || !isFilesViewActive || hasNameFilter) {
+    if (explorerView === 'search') {
+      searchPanel.collapseAllResults()
+      return
+    }
+    if (hasNameFilter) {
+      setNameFilterCollapsedPaths((current) => new Set([...current, ...nameFilterExpandedPaths]))
+      return
+    }
+    if (!activeWorktreeId) {
       return
     }
     collapseAllDirs(activeWorktreeId)
-  }, [activeWorktreeId, collapseAllDirs, hasNameFilter, isFilesViewActive])
+  }, [
+    activeWorktreeId,
+    collapseAllDirs,
+    explorerView,
+    hasNameFilter,
+    nameFilterExpandedPaths,
+    searchPanel,
+    setNameFilterCollapsedPaths
+  ])
+  const handleExpandAll = useCallback(() => {
+    if (explorerView === 'search') {
+      searchPanel.expandAllResults()
+      return
+    }
+    if (hasNameFilter) {
+      setNameFilterCollapsedPaths(new Set())
+    }
+  }, [explorerView, hasNameFilter, searchPanel, setNameFilterCollapsedPaths])
+  const handleToggleFileSearchViewMode = useCallback(() => {
+    void updateSettings({ fileSearchViewMode: fileSearchViewMode === 'tree' ? 'list' : 'tree' })
+  }, [fileSearchViewMode, updateSettings])
   const handleToggleDotfiles = useCallback(() => {
     if (activeWorktreeId) {
       toggleShowDotfilesForWorktree(activeWorktreeId)
@@ -212,7 +255,19 @@ function FileExplorerFiles(): React.JSX.Element {
           refresh={manualRefresh}
           canRefresh={isFilesViewActive}
           canCollapseAll={canCollapseAll}
+          collapseAllAction={
+            (explorerView === 'search' && searchPanel.allResultsCollapsed) ||
+            (hasNameFilter &&
+              nameFilterExpandedPaths.size === 0 &&
+              hasVisibleCollapsedNameFilterDir)
+              ? 'expand'
+              : 'collapse'
+          }
           onCollapseAll={handleCollapseAll}
+          onExpandAll={handleExpandAll}
+          showFileSearchViewModeToggle={explorerView === 'search'}
+          fileSearchViewMode={fileSearchViewMode}
+          onToggleFileSearchViewMode={handleToggleFileSearchViewMode}
           showGitIgnoredFilesToggle={activeRepoSupportsGit}
           showGitIgnoredFiles={showGitIgnoredFiles}
           onToggleGitIgnoredFiles={toggleGitIgnoredFiles}

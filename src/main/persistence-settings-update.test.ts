@@ -655,6 +655,17 @@ describe('Store', () => {
     expect(store.getSettings().sourceControlViewMode).toBe('tree')
   })
 
+  it('normalizes and persists fileSearchViewMode as a user setting', async () => {
+    const store = await createStore()
+    expect(store.getSettings().fileSearchViewMode).toBe('list')
+
+    store.updateSettings({ fileSearchViewMode: 'tree' })
+    expect(store.getSettings().fileSearchViewMode).toBe('tree')
+
+    store.updateSettings({ fileSearchViewMode: 'grid' as never })
+    expect(store.getSettings().fileSearchViewMode).toBe('list')
+  })
+
   it('updateSettings persists sourceControlGroupOrder as a user setting', async () => {
     const store = await createStore()
     expect(store.getSettings().sourceControlGroupOrder).toBe('changes-first')
@@ -723,16 +734,25 @@ describe('Store', () => {
     expect(store.getSettings().sourceControlViewMode).toBe('list')
     expect(store.getSettings().sourceControlGroupOrder).toBe('changes-first')
 
-    store.updateSettings({ sourceControlViewMode: 'tree', sourceControlGroupOrder: 'staged-first' })
+    store.updateSettings({
+      sourceControlViewMode: 'tree',
+      sourceControlGroupOrder: 'staged-first',
+      fileSearchViewMode: 'tree'
+    })
     store.flush()
 
     const persisted = readDataFile() as {
-      settings?: { sourceControlGroupOrder?: string; sourceControlViewMode?: string }
+      settings?: {
+        fileSearchViewMode?: string
+        sourceControlGroupOrder?: string
+        sourceControlViewMode?: string
+      }
       workspaceSession?: typeof workspaceSession
       worktreeMeta?: Record<string, unknown>
     }
     expect(persisted.settings?.sourceControlViewMode).toBe('tree')
     expect(persisted.settings?.sourceControlGroupOrder).toBe('staged-first')
+    expect(persisted.settings?.fileSearchViewMode).toBe('tree')
     expect(persisted.workspaceSession).toEqual({
       ...getDefaultWorkspaceSession(),
       ...workspaceSession
@@ -747,10 +767,14 @@ describe('Store', () => {
     expect(collectPropertyPaths(persisted, 'sourceControlGroupOrder')).toEqual([
       'settings.sourceControlGroupOrder'
     ])
+    expect(collectPropertyPaths(persisted, 'fileSearchViewMode')).toEqual([
+      'settings.fileSearchViewMode'
+    ])
 
     const reloaded = await createStore()
     expect(reloaded.getSettings().sourceControlViewMode).toBe('tree')
     expect(reloaded.getSettings().sourceControlGroupOrder).toBe('staged-first')
+    expect(reloaded.getSettings().fileSearchViewMode).toBe('tree')
     expect(reloaded.getWorkspaceSession().activeWorktreeId).toBe('repo1::/worktree-a')
   })
 })

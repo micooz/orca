@@ -10438,7 +10438,10 @@
             "d95e30fe28": "Actualizar explorador",
             "6026b16950": "Contraer todo",
             "693cbeadd0": "Buscar",
-            "c1f3f3ec70": "Buscar en el contenido de los archivos"
+            "c1f3f3ec70": "Buscar en el contenido de los archivos",
+            "expandAll": "Expandir todo",
+            "viewAsList": "Ver como lista",
+            "viewAsTree": "Ver como árbol"
           },
           "FileExplorerTreeStatus": {
             "ce03835e1f": "No hay archivos en este espacio de trabajo",

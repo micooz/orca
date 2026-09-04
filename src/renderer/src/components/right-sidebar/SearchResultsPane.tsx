@@ -7,6 +7,7 @@ import type {
 } from '../../../../shared/code-search-types'
 import type { SearchRow } from './search-rows'
 import { FileResultRow, MatchResultRow } from './SearchResultItems'
+import { SearchDirectoryResultRow } from './SearchDirectoryResultRow'
 import { translate } from '@/i18n/i18n'
 
 const SEARCH_VIRTUAL_OVERSCAN = 12
@@ -19,6 +20,7 @@ type SearchResultsPaneProps = {
   rows: SearchRow[]
   scrollRef: React.RefObject<HTMLDivElement | null>
   onToggleCollapsedFile: (filePath: string) => void
+  onToggleCollapsedDirectory: (directoryKey: string) => void
   onMatchClick: (fileResult: SearchFileResult, match: SearchMatch) => void
 }
 
@@ -30,6 +32,7 @@ export function SearchResultsPane({
   rows,
   scrollRef,
   onToggleCollapsedFile,
+  onToggleCollapsedDirectory,
   onMatchClick
 }: SearchResultsPaneProps): React.JSX.Element {
   const virtualizer = useVirtualizer({
@@ -40,16 +43,16 @@ export function SearchResultsPane({
       if (!row) {
         return 20
       }
-      // Why: file rows include pt-1.5 (6 px) for inter-group spacing, so
-      // their estimate is taller than match rows.
       if (row.type === 'file') {
-        return 28
+        return 24
+      }
+      if (row.type === 'directory') {
+        return 24
       }
       return 20
     },
-    // Why: paddingEnd adds visible breathing room after the last result row.
-    // paddingStart is unnecessary because each file row already includes
-    // pt-1.5 for inter-group spacing (which also covers the first row).
+    // Why: match the vertical breathing room around the name-search tree.
+    paddingStart: 8,
     paddingEnd: 8,
     overscan: SEARCH_VIRTUAL_OVERSCAN,
     getItemKey: (index) => {
@@ -59,6 +62,9 @@ export function SearchResultsPane({
       }
       if (row.type === 'file') {
         return `file:${row.fileResult.filePath}`
+      }
+      if (row.type === 'directory') {
+        return row.key
       }
       return `match:${row.fileResult.filePath}:${row.match.line}:${row.match.column}:${row.matchIndex}`
     }
@@ -101,13 +107,26 @@ export function SearchResultsPane({
                     <FileResultRow
                       fileResult={row.fileResult}
                       collapsed={row.collapsed}
+                      depth={row.depth}
+                      showParentPath={row.showParentPath}
                       onToggleCollapse={() => onToggleCollapsedFile(row.fileResult.filePath)}
+                    />
+                  )}
+                  {row.type === 'directory' && (
+                    <SearchDirectoryResultRow
+                      name={row.name}
+                      path={row.path}
+                      depth={row.depth}
+                      matchCount={row.matchCount}
+                      collapsed={row.collapsed}
+                      onToggleCollapse={() => onToggleCollapsedDirectory(row.key)}
                     />
                   )}
                   {row.type === 'match' && (
                     <MatchResultRow
                       match={row.match}
                       relativePath={row.fileResult.relativePath}
+                      depth={row.depth}
                       onClick={() => onMatchClick(row.fileResult, row.match)}
                     />
                   )}

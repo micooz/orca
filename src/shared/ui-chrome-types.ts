@@ -1,5 +1,6 @@
 import type { LinearConcreteWorkspaceId } from './linear/workspace-types'
 import type { LinearCustomViewModel } from './linear/project-types'
+import type { ListTreeViewMode } from './list-tree-view-mode'
 
 export type TaskViewPresetId = 'all' | 'issues' | 'review' | 'my-issues' | 'my-prs' | 'prs'
 
@@ -9,7 +10,8 @@ export type OpenInApplication = {
   command: string
 }
 
-export type SourceControlViewMode = 'list' | 'tree'
+export type SourceControlViewMode = ListTreeViewMode
+export type FileSearchViewMode = ListTreeViewMode
 export type SourceControlGroupOrder = 'changes-first' | 'staged-first' | 'untracked-first'
 
 export type LeftSidebarAppearanceMode = 'default' | 'match-terminal' | 'tinted'

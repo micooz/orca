@@ -15,6 +15,7 @@ export function createSettings(overrides: TestSettingsOverrides = {}): GlobalSet
   const appFontFamily = overrides.appFontFamily ?? 'Geist'
   const agentStatusHooksEnabled = overrides.agentStatusHooksEnabled ?? true
   const tabAutoGenerateTitle = overrides.tabAutoGenerateTitle ?? false
+  const fileSearchViewMode = overrides.fileSearchViewMode ?? 'list'
   // Mirror-path tests assert the shared runtime home, which production still uses
   // on Windows; opt these cases onto that lane unless a test overrides it.
   setShellStartupEnvProbeSupportedForTest(overrides.shellStartupEnvProbeSupported ?? false)
@@ -135,6 +136,7 @@ export function createSettings(overrides: TestSettingsOverrides = {}): GlobalSet
     leftSidebarAppearanceMode: overrides.leftSidebarAppearanceMode ?? 'default',
     appFontFamily,
     agentStatusHooksEnabled,
-    tabAutoGenerateTitle
+    tabAutoGenerateTitle,
+    fileSearchViewMode
   }
 }

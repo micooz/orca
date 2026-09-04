@@ -1,0 +1,3 @@
+export const PATH_TREE_INDENT_PX = 12
+export const PATH_TREE_DIRECTORY_PADDING_PX = 8
+export const PATH_TREE_FILE_PADDING_PX = 20

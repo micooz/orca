@@ -21,6 +21,7 @@ describe('getDefaultSettings', () => {
 
   it('uses list view for Source Control changes by default', () => {
     expect(getDefaultSettings('/tmp').sourceControlViewMode).toBe('list')
+    expect(getDefaultSettings('/tmp').fileSearchViewMode).toBe('list')
   })
 
   it('keeps Source Control changes first by default', () => {

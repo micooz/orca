@@ -10,6 +10,7 @@ import {
   normalizeMobilePairingCustomAddresses
 } from '../../../shared/mobile-pairing-custom-address'
 import { normalizeSourceControlGroupOrder } from '../../../shared/source-control-group-order'
+import { normalizeListTreeViewMode } from '../../../shared/list-tree-view-mode'
 import { normalizeProjectGroups } from '../../../shared/project-groups'
 import { normalizeDisabledTuiAgents } from '../../../shared/tui-agent-selection'
 import { hasUnsupportedTuiAgentArgs } from '../../../shared/tui-agent-launch-defaults'
@@ -51,6 +52,7 @@ export type PreparedLoadedProfileSettings = {
   mobilePairingCustomAddresses: GlobalSettings['mobilePairingCustomAddresses']
   normalizedNotifications: GlobalSettings['notifications']
   normalizedSourceControlGroupOrder: GlobalSettings['sourceControlGroupOrder']
+  normalizedFileSearchViewMode: GlobalSettings['fileSearchViewMode']
   normalizedOnboarding: PersistedState['onboarding']
   normalizedProjectGroups: ProjectGroup[]
 }
@@ -229,6 +231,15 @@ export function prepareLoadedProfileSettings(
   ) {
     markNeedsSave()
   }
+  const normalizedFileSearchViewMode = normalizeListTreeViewMode(
+    parsed.settings?.fileSearchViewMode
+  )
+  if (
+    parsed.settings?.fileSearchViewMode !== undefined &&
+    parsed.settings.fileSearchViewMode !== normalizedFileSearchViewMode
+  ) {
+    markNeedsSave()
+  }
   return {
     migratedExperimentalActivity,
     migratedAutoRenameBranchFromWork,
@@ -249,6 +260,7 @@ export function prepareLoadedProfileSettings(
     mobilePairingCustomAddresses,
     normalizedNotifications,
     normalizedSourceControlGroupOrder,
+    normalizedFileSearchViewMode,
     normalizedOnboarding,
     normalizedProjectGroups
   }

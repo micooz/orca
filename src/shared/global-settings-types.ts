@@ -29,6 +29,7 @@ import type {
   AgentDashboardMode,
   BranchPrefixStrategy,
   FloatingTerminalTriggerLocation,
+  FileSearchViewMode,
   LeftSidebarAppearanceMode,
   OpenInApplication,
   SourceControlGroupOrder,
@@ -214,6 +215,8 @@ export type GlobalSettings = {
   /** Deprecated: migration/backward-compat only. Use PersistedUIState.rightSidebarOpen. */
   rightSidebarOpenByDefault: boolean
   showGitIgnoredFiles?: boolean
+  /** Preferred Explorer content-search layout. Per-user, not per-workspace. */
+  fileSearchViewMode: FileSearchViewMode
   /** Preferred Source Control changes layout. Per-user, not per-workspace. */
   sourceControlViewMode: SourceControlViewMode
   /** Preferred Source Control group order. Per-user, not per-workspace. */

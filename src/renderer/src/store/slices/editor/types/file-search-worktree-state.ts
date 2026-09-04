@@ -12,6 +12,7 @@ export type FileSearchWorktreeState = {
   resultOwner: FileSearchResultOwner | null
   loading: boolean
   collapsedFiles: Set<string>
+  collapsedDirectories?: Set<string>
   seedRequestId?: number
   focusRequestId?: number
 }

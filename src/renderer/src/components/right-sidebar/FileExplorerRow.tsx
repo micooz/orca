@@ -203,8 +203,7 @@ export function FileExplorerRow({
             </>
           )}
           <span
-            // Why: marks the rename hotspot so the row's click handler can hold
-            // back the directory toggle until the double-click window closes.
+            // Why: later clicks in a filename rename gesture must not toggle a directory again.
             {...{ [RENAME_HOTSPOT_ATTR]: '' }}
             className={cn(
               'truncate',
@@ -222,9 +221,10 @@ export function FileExplorerRow({
                   : undefined
             }
             onDoubleClick={(e) => {
-              // Why: scope rename to the filename text so "pin preview" and the
-              // directory toggle stay reachable on the icon and empty row area.
               e.stopPropagation()
+              if (node.isDirectory) {
+                return
+              }
               onStartRename(node)
             }}
           >

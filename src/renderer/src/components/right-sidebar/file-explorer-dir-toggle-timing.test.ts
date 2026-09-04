@@ -14,8 +14,8 @@ describe('resolveDirToggleTiming', () => {
     expect(resolveDirToggleTiming({ fromRenameHotspot: false, clickCount: 2 })).toBe('immediate')
   })
 
-  it('defers the first click on the filename so a double click can cancel it', () => {
-    expect(resolveDirToggleTiming({ fromRenameHotspot: true, clickCount: 1 })).toBe('deferred')
+  it('toggles immediately on the first filename click', () => {
+    expect(resolveDirToggleTiming({ fromRenameHotspot: true, clickCount: 1 })).toBe('immediate')
   })
 
   it('drops the toggle on the second click, which belongs to the rename', () => {

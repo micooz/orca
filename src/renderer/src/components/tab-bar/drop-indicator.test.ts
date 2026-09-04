@@ -71,16 +71,18 @@ describe('getTabStripBorderClasses', () => {
 })
 
 describe('getTabRootStateClasses', () => {
-  it('returns the shared selected-tab surface treatment', () => {
+  it('returns a card-colored light active tab with a dark-mode surface lift', () => {
     const classes = getTabRootStateClasses(true)
-    expect(classes).toContain('bg-[color-mix(in_srgb,var(--foreground)_6%,var(--card))]')
+    expect(classes).toContain('bg-card')
+    expect(classes).toContain('dark:bg-[color-mix(in_srgb,var(--foreground)_6%,var(--card))]')
     expect(classes).toContain('text-foreground')
     expect(classes).not.toContain('hover:text-foreground')
   })
 
-  it('returns the shared inactive-tab surface treatment', () => {
+  it('returns a subtly tinted light inactive tab with a dark-mode card surface', () => {
     const classes = getTabRootStateClasses(false)
-    expect(classes).toContain('bg-card')
+    expect(classes).toContain('bg-[color-mix(in_srgb,var(--foreground)_6%,var(--card))]')
+    expect(classes).toContain('dark:bg-card')
     expect(classes).toContain('text-muted-foreground')
     expect(classes).toContain('hover:text-foreground')
   })

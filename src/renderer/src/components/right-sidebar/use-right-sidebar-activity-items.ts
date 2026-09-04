@@ -68,6 +68,13 @@ export function useRightSidebarActivityItems({
         shortcut: explorerShortcut === 'Unassigned' ? '' : explorerShortcut
       },
       {
+        id: 'source-control',
+        icon: GitBranch,
+        title: translate('auto.components.right.sidebar.index.0314901467', 'Source Control'),
+        shortcut: sourceControlShortcut === 'Unassigned' ? '' : sourceControlShortcut,
+        gitOnly: true
+      },
+      {
         id: 'vault',
         icon: AgentSessionHistoryIcon,
         title: translate('auto.components.right.sidebar.index.aiVaultSessionHistory', 'Agents'),
@@ -89,13 +96,6 @@ export function useRightSidebarActivityItems({
         title: translate('auto.components.right.sidebar.index.parentPrChecks', 'PR Checks'),
         shortcut: '',
         folderOnly: true
-      },
-      {
-        id: 'source-control',
-        icon: GitBranch,
-        title: translate('auto.components.right.sidebar.index.0314901467', 'Source Control'),
-        shortcut: sourceControlShortcut === 'Unassigned' ? '' : sourceControlShortcut,
-        gitOnly: true
       },
       {
         id: 'checks',

@@ -17614,6 +17614,10 @@
   "sourceControl": {
     "unlinkedPr": {
       "status": "PR #{{number}} unlinked"
+    },
+    "tree": {
+      "collapseAll": "Collapse All",
+      "expandAll": "Expand All"
     }
   },
   "agentsSidebarIntro": {

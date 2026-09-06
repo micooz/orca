@@ -5,11 +5,7 @@ import { ConflictSummaryCard, OperationBanner } from './conflict-status-cards'
 import { EmptyState } from './empty-state'
 import { TooManyChangesBanner } from './too-many-changes-banner'
 
-/**
- * Renders the banners and empty states that sit above the source control file list: conflict
- * summary or in-progress operation, the huge-repository warning, and the empty state matching the
- * current filter (none, too large, or no matches).
- */
+/** Renders conflict, operation, repository-size, and filter-size status above the commit area. */
 export function SourceControlContentStatus({
   unresolvedConflictCount,
   conflictOperation,
@@ -21,13 +17,7 @@ export function SourceControlContentStatus({
   repositoryHuge,
   worktreeId,
   onRetryStatus,
-  showGenericEmptyState,
-  normalizedFilter,
-  branchBaseRef,
-  filterTooLarge,
-  hasFilteredUncommittedEntries,
-  hasFilteredBranchEntries,
-  filterQuery
+  filterTooLarge
 }: {
   unresolvedConflictCount: number
   conflictOperation: GitConflictOperation
@@ -39,13 +29,7 @@ export function SourceControlContentStatus({
   repositoryHuge: { limit: number } | null | undefined
   worktreeId: string
   onRetryStatus: (signal: AbortSignal) => Promise<void>
-  showGenericEmptyState: boolean
-  normalizedFilter: string
-  branchBaseRef: string | null
   filterTooLarge: boolean
-  hasFilteredUncommittedEntries: boolean
-  hasFilteredBranchEntries: boolean
-  filterQuery: string
 }): React.JSX.Element {
   return (
     <>
@@ -83,26 +67,6 @@ export function SourceControlContentStatus({
           />
         </div>
       )}
-      {showGenericEmptyState && !normalizedFilter ? (
-        <EmptyState
-          heading={translate(
-            'auto.components.right.sidebar.source.control.content.status.3f425c239c',
-            'No changes on this branch'
-          )}
-          supportingText={translate(
-            'auto.components.right.sidebar.source.control.content.status.640f6fdb36',
-            'This workspace is clean and this branch has no changes ahead of {{value0}}',
-            {
-              value0:
-                branchBaseRef ??
-                translate(
-                  'auto.components.right.sidebar.source.control.content.status.8deb86bbec',
-                  'base'
-                )
-            }
-          )}
-        />
-      ) : null}
       {filterTooLarge && (
         <EmptyState
           heading={translate(
@@ -115,19 +79,45 @@ export function SourceControlContentStatus({
           )}
         />
       )}
-      {normalizedFilter && !hasFilteredUncommittedEntries && !hasFilteredBranchEntries && (
-        <EmptyState
-          heading={translate(
-            'auto.components.right.sidebar.source.control.content.status.1b6caf533d',
-            'No matching files'
-          )}
-          supportingText={translate(
-            'auto.components.right.sidebar.source.control.content.status.00c07771b7',
-            'No changed files match "{{value0}}"',
-            { value0: filterQuery }
-          )}
-        />
-      )}
     </>
+  )
+}
+
+export function SourceControlNoChanges({ branchBaseRef }: { branchBaseRef: string | null }) {
+  return (
+    <EmptyState
+      heading={translate(
+        'auto.components.right.sidebar.source.control.content.status.3f425c239c',
+        'No changes on this branch'
+      )}
+      supportingText={translate(
+        'auto.components.right.sidebar.source.control.content.status.640f6fdb36',
+        'This workspace is clean and this branch has no changes ahead of {{value0}}',
+        {
+          value0:
+            branchBaseRef ??
+            translate(
+              'auto.components.right.sidebar.source.control.content.status.8deb86bbec',
+              'base'
+            )
+        }
+      )}
+    />
+  )
+}
+
+export function SourceControlNoMatchingFiles({ filterQuery }: { filterQuery: string }) {
+  return (
+    <EmptyState
+      heading={translate(
+        'auto.components.right.sidebar.source.control.content.status.1b6caf533d',
+        'No matching files'
+      )}
+      supportingText={translate(
+        'auto.components.right.sidebar.source.control.content.status.00c07771b7',
+        'No changed files match "{{value0}}"',
+        { value0: filterQuery }
+      )}
+    />
   )
 }

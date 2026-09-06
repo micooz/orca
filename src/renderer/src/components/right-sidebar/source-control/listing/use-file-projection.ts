@@ -39,6 +39,7 @@ import {
 import type { FlatEntry } from './use-selection'
 import type { GitStatusSourceControlTreeNode } from './directory-action-paths'
 import { SUBMODULE_EMPTY_LABEL, SUBMODULE_LOADING_LABEL } from './row-layout'
+import { collectPathTreeDirectoryKeys } from '../../path-tree'
 
 export type SourceControlFileProjection = {
   grouped: SourceControlEntryGroups
@@ -60,6 +61,7 @@ export type SourceControlFileProjection = {
     Record<SourceControlDisplaySectionId, RenderableSubmoduleListItem[]>
   >
   visibleBranchTreeRows: readonly SourceControlTreeNode<GitBranchChangeEntry, 'branch'>[]
+  treeDirectoryKeys: readonly string[]
   visibleSelectionEntries: FlatEntry[]
 }
 
@@ -253,6 +255,20 @@ export function useSourceControlFileProjection({
     [branchTreeRoots, collapsedTreeDirs, sourceControlViewMode]
   )
 
+  const treeDirectoryKeys = useMemo(() => {
+    if (sourceControlViewMode !== 'tree') {
+      return []
+    }
+    const keys = new Set<string>()
+    for (const section of displaySections) {
+      collectPathTreeDirectoryKeys(treeRootsBySection[section.id] ?? []).forEach((key) =>
+        keys.add(key)
+      )
+    }
+    collectPathTreeDirectoryKeys(branchTreeRoots).forEach((key) => keys.add(key))
+    return [...keys]
+  }, [branchTreeRoots, displaySections, sourceControlViewMode, treeRootsBySection])
+
   const visibleSelectionEntries = useMemo(() => {
     const arr: FlatEntry[] = []
     // Why: list view splices in lazy submodule rows, so selection/range bookkeeping must read the injected rows, not the pre-injection entries.
@@ -297,6 +313,7 @@ export function useSourceControlFileProjection({
     visibleTreeRowsBySection,
     visibleListRowsBySection,
     visibleBranchTreeRows,
+    treeDirectoryKeys,
     visibleSelectionEntries
   }
 }

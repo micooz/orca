@@ -28,6 +28,7 @@ export type PersistedUIWriteBaseline = {
   alwaysShowDefaultBranchWorkspace: boolean
   showDotfilesByWorktree: Record<string, boolean>
   sourceControlCollapsedSectionsByWorktree: Record<string, string[]>
+  sourceControlCollapsedTreeDirsByWorktree: Record<string, string[]>
   filterRepoIds: readonly string[]
   acknowledgedAgentsByPaneKey: Record<string, number>
   activityClearedAtByPaneKey: Record<string, number>
@@ -58,6 +59,7 @@ const PERSISTED_UI_WRITE_BASELINE_FIELD_SET = {
   alwaysShowDefaultBranchWorkspace: true,
   showDotfilesByWorktree: true,
   sourceControlCollapsedSectionsByWorktree: true,
+  sourceControlCollapsedTreeDirsByWorktree: true,
   filterRepoIds: true,
   acknowledgedAgentsByPaneKey: true,
   activityClearedAtByPaneKey: true,
@@ -121,11 +123,15 @@ function writeFieldEqual(field: keyof PersistedUIWriteBaseline, a: unknown, b: u
   if (
     field === 'showDotfilesByWorktree' ||
     field === 'sourceControlCollapsedSectionsByWorktree' ||
+    field === 'sourceControlCollapsedTreeDirsByWorktree' ||
     field === 'acknowledgedAgentsByPaneKey' ||
     field === 'activityClearedAtByPaneKey' ||
     field === 'manuallyUnreadTurnsByPaneKey'
   ) {
-    if (field === 'sourceControlCollapsedSectionsByWorktree') {
+    if (
+      field === 'sourceControlCollapsedSectionsByWorktree' ||
+      field === 'sourceControlCollapsedTreeDirsByWorktree'
+    ) {
       return stringArrayRecordEqual(
         a as Record<string, string[]> | undefined,
         b as Record<string, string[]> | undefined

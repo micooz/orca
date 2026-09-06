@@ -4,6 +4,7 @@ import { SourceControlNotesShelf } from '../notes/notes-shelf'
 import { SourceControlPanelContent } from './panel-content'
 import { SourceControlPanelDialogs } from './panel-dialogs'
 import type { SourceControlPanelReadyProps } from './panel-props'
+import { getSourceControlTreeCollapseControl } from '../source-control-tree-collapse'
 
 /** The panel chrome: toolbar, notes shelf, the scrolling file surface, bulk bar and dialog layer. */
 export function SourceControlPanelReady(props: SourceControlPanelReadyProps) {
@@ -16,6 +17,8 @@ export function SourceControlPanelReady(props: SourceControlPanelReadyProps) {
     bulkStagePaths,
     bulkUnstagePaths,
     clearSelection,
+    collapseAllTreeDirs,
+    collapsedTreeDirs,
     compareBaseRef,
     deleteDiffComment,
     diffCommentCount,
@@ -24,6 +27,7 @@ export function SourceControlPanelReady(props: SourceControlPanelReadyProps) {
     diffCommentsForActive,
     filterExpanded,
     filterQuery,
+    expandAllTreeDirs,
     gitIdentityDisplay,
     handleBulkStage,
     handleBulkUnstage,
@@ -51,9 +55,22 @@ export function SourceControlPanelReady(props: SourceControlPanelReadyProps) {
     setSourceControlRoot,
     settings,
     sourceControlViewMode,
+    treeDirectoryKeys,
     suppressedGitHubPRState,
     visibleCreatePrHeaderAction
   } = model
+  const treeCollapseControl = getSourceControlTreeCollapseControl(
+    sourceControlViewMode,
+    treeDirectoryKeys,
+    collapsedTreeDirs
+  )
+  const toggleAllTreeDirs = () => {
+    if (treeCollapseControl.action === 'expand') {
+      expandAllTreeDirs(treeDirectoryKeys)
+    } else {
+      collapseAllTreeDirs(treeDirectoryKeys)
+    }
+  }
 
   return (
     <>
@@ -85,6 +102,9 @@ export function SourceControlPanelReady(props: SourceControlPanelReadyProps) {
           branchCompareRefreshDisabled={!branchSummary || branchSummary.status === 'loading'}
           diffCommentCount={diffCommentCount}
           onExpandNotes={() => setDiffCommentsExpanded(true)}
+          treeCollapseAction={treeCollapseControl.action}
+          treeCollapseDisabled={!treeCollapseControl.enabled}
+          onToggleAllTreeDirs={toggleAllTreeDirs}
           branchSummary={branchSummary}
           branchLineTotal={branchLineTotal}
           compareBaseRef={compareBaseRef}

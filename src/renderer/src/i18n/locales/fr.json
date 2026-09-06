@@ -1,4 +1,10 @@
 {
+  "sourceControl": {
+    "tree": {
+      "collapseAll": "Tout réduire",
+      "expandAll": "Tout développer"
+    }
+  },
   "app": {
     "recoverableError": {
       "rootTitle": "Orca a rencontré une erreur de rendu.",

@@ -2,7 +2,11 @@ import { GitHistoryPanel } from '../sync/git-history-panel'
 import { shouldShowSourceControlCompareUnavailableCard } from './header-toolbar'
 import { shouldRenderCommitArea } from '../commit/component-gates'
 import { SourceControlBranchSection } from '../listing/branch-section'
-import { SourceControlContentStatus } from '../listing/content-status'
+import {
+  SourceControlContentStatus,
+  SourceControlNoChanges,
+  SourceControlNoMatchingFiles
+} from '../listing/content-status'
 import { SourceControlUncommittedSections } from '../listing/uncommitted-sections'
 import { CompareUnavailable } from '../sync/compare-summary'
 import { SourceControlCommitSurface } from './commit-surface'
@@ -104,13 +108,7 @@ export function SourceControlPanelContent(props: SourceControlPanelReadyProps) {
         repositoryHuge={repositoryHuge}
         worktreeId={currentWorktreeId}
         onRetryStatus={refreshActiveGitStatus}
-        showGenericEmptyState={showGenericEmptyState}
-        normalizedFilter={normalizedFilter}
-        branchBaseRef={branchSummary?.baseRef ?? null}
         filterTooLarge={fileFilterState.tooLarge}
-        hasFilteredUncommittedEntries={hasFilteredUncommittedEntries}
-        hasFilteredBranchEntries={hasFilteredBranchEntries}
-        filterQuery={filterQuery}
       />
 
       {/* Why: keep CommitArea mounted across normal states — gating on hasUncommittedEntries (#1448) would unmount the action surface on clean worktrees and mid-commit as the staged list clears. Active merge/rebase/cherry-pick is the exception. */}
@@ -118,6 +116,14 @@ export function SourceControlPanelContent(props: SourceControlPanelReadyProps) {
 
       {shouldRenderCommitArea(unresolvedConflicts.length, conflictOperation) && (
         <SourceControlCommitSurface {...props} showGenericEmptyState={showGenericEmptyState} />
+      )}
+
+      {showGenericEmptyState && !normalizedFilter && (
+        <SourceControlNoChanges branchBaseRef={branchSummary?.baseRef ?? null} />
+      )}
+
+      {normalizedFilter && !hasFilteredUncommittedEntries && !hasFilteredBranchEntries && (
+        <SourceControlNoMatchingFiles filterQuery={filterQuery} />
       )}
 
       {hasFilteredUncommittedEntries && (

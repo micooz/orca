@@ -445,6 +445,25 @@ describe('removeWorktree state cleanup', () => {
     })
   })
 
+  it('cleans up Source Control directory collapse state for the removed worktree', async () => {
+    const store = createTestStore()
+    const wt = makeWorktree({ id: 'repo1::/path/wt1', repoId: 'repo1', path: '/path/wt1' })
+
+    store.setState({
+      worktreesByRepo: { repo1: [wt] },
+      sourceControlCollapsedTreeDirsByWorktree: {
+        'repo1::/path/wt1': ['staged:src'],
+        'repo1::/path/wt2': ['branch:docs']
+      }
+    } as Partial<AppState>)
+
+    await store.getState().removeWorktree({ id: 'repo1::/path/wt1', executionHostId: null })
+
+    expect(store.getState().sourceControlCollapsedTreeDirsByWorktree).toEqual({
+      'repo1::/path/wt2': ['branch:docs']
+    })
+  })
+
   it('cleans up activeTabIdByWorktree for the removed worktree', async () => {
     const store = createTestStore()
     const wt = makeWorktree({ id: 'repo1::/path/wt1', repoId: 'repo1', path: '/path/wt1' })

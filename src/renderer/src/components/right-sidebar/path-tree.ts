@@ -157,6 +157,21 @@ export function flattenPathTree<Entry extends PathTreeEntry, Metadata extends ob
   return rows
 }
 
+export function collectPathTreeDirectoryKeys<Entry extends PathTreeEntry, Metadata extends object>(
+  nodes: readonly PathTreeNode<Entry, Metadata>[]
+): string[] {
+  const keys: string[] = []
+  const visit = (node: PathTreeNode<Entry, Metadata>): void => {
+    if (node.type === 'file') {
+      return
+    }
+    keys.push(node.key)
+    node.children.forEach(visit)
+  }
+  nodes.forEach(visit)
+  return keys
+}
+
 export function compactPathTree<Entry extends PathTreeEntry, Metadata extends object>(
   nodes: PathTreeNode<Entry, Metadata>[]
 ): PathTreeNode<Entry, Metadata>[] {

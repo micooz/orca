@@ -50,3 +50,25 @@ export function normalizeSourceControlCollapsedSectionsByWorktree(
   }
   return result
 }
+
+export function normalizeSourceControlCollapsedTreeDirsByWorktree(
+  value: unknown
+): Record<string, string[]> {
+  if (value === null || typeof value !== 'object' || Array.isArray(value)) {
+    return {}
+  }
+  const result: Record<string, string[]> = {}
+  for (const [worktreeId, dirs] of Object.entries(value as Record<string, unknown>)) {
+    if (
+      !worktreeId ||
+      worktreeId === '__proto__' ||
+      worktreeId === 'constructor' ||
+      worktreeId === 'prototype' ||
+      !Array.isArray(dirs)
+    ) {
+      continue
+    }
+    result[worktreeId] = [...new Set(dirs.filter((dir): dir is string => typeof dir === 'string'))]
+  }
+  return result
+}

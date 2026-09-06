@@ -150,6 +150,10 @@ export function applyRemoveWorktreeSuccessState(
       ...s.sourceControlCollapsedSectionsByWorktree
     }
     delete nextSourceControlCollapsedSectionsByWorktree[worktreeId]
+    const nextSourceControlCollapsedTreeDirsByWorktree = {
+      ...s.sourceControlCollapsedTreeDirsByWorktree
+    }
+    delete nextSourceControlCollapsedTreeDirsByWorktree[worktreeId]
     // Why: clear the huge-status marker so it doesn't linger after the worktree is gone.
     const nextGitStatusHugeByWorktree = { ...s.gitStatusHugeByWorktree }
     delete nextGitStatusHugeByWorktree[worktreeId]
@@ -255,6 +259,7 @@ export function applyRemoveWorktreeSuccessState(
       editorCursorLine: nextEditorCursorLine,
       showDotfilesByWorktree: nextShowDotfilesByWorktree,
       sourceControlCollapsedSectionsByWorktree: nextSourceControlCollapsedSectionsByWorktree,
+      sourceControlCollapsedTreeDirsByWorktree: nextSourceControlCollapsedTreeDirsByWorktree,
       expandedDirs: nextExpandedDirs,
       gitStatusHugeByWorktree: nextGitStatusHugeByWorktree,
       gitStatusByWorktree: nextGitStatusByWorktree,

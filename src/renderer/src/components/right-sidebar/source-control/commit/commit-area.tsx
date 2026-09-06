@@ -7,6 +7,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { translate } from '@/i18n/i18n'
+import { cn } from '@/lib/utils'
 import { hasExpandedCommitFailureDetails, summarizeCommitFailure } from './commit-failure-summary'
 import { isCommitMessageFieldDisabled } from '../../source-control-commit-eligibility'
 import { CommitActionMenu } from './commit-action-menu'
@@ -212,7 +213,7 @@ export function CommitArea({
   )
 
   return (
-    <div className="px-3 pb-2">
+    <div className={cn('px-3 pb-2', !showComposer && 'pt-2')}>
       {showComposer ? (
         <CommitMessageComposer
           rows={rows}

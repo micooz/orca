@@ -14,6 +14,8 @@ import { HostedReviewHeaderLink, HostedReviewIcon } from '../review/hosted-revie
 import { SourceControlBranchContextRow } from './branch-context-row'
 import { shouldShowSourceControlBranchContextChrome } from './branch-context-stats'
 import { SourceControlHeaderOverflowMenu } from './header-overflow-menu'
+import type { SourceControlTreeCollapseAction } from '../source-control-tree-collapse'
+import { SourceControlTreeCollapseButton } from './tree-collapse-button'
 
 type SourceControlHeaderToolbarProps = {
   filterQuery: string
@@ -36,6 +38,9 @@ type SourceControlHeaderToolbarProps = {
   branchCompareRefreshDisabled: boolean
   diffCommentCount: number
   onExpandNotes: () => void
+  treeCollapseAction: SourceControlTreeCollapseAction
+  treeCollapseDisabled: boolean
+  onToggleAllTreeDirs: () => void
   branchSummary: GitBranchCompareSummary | null
   compareBaseRef: string | null
   headDisplay?: WorktreeGitIdentityDisplay | null
@@ -164,6 +169,9 @@ export function SourceControlHeaderToolbar({
   branchCompareRefreshDisabled,
   diffCommentCount,
   onExpandNotes,
+  treeCollapseAction,
+  treeCollapseDisabled,
+  onToggleAllTreeDirs,
   branchSummary,
   compareBaseRef,
   headDisplay = null,
@@ -243,6 +251,11 @@ export function SourceControlHeaderToolbar({
               // Why: keep filter/overflow pinned right without stretching Create PR.
               <span className="min-w-0 flex-1" aria-hidden="true" />
             ) : null}
+            <SourceControlTreeCollapseButton
+              action={treeCollapseAction}
+              disabled={treeCollapseDisabled}
+              onToggle={onToggleAllTreeDirs}
+            />
             <button
               type="button"
               data-testid="source-control-filter-toggle"
@@ -291,6 +304,11 @@ export function SourceControlHeaderToolbar({
                 )}
               />
             </div>
+            <SourceControlTreeCollapseButton
+              action={treeCollapseAction}
+              disabled={treeCollapseDisabled}
+              onToggle={onToggleAllTreeDirs}
+            />
             <Button
               type="button"
               variant="ghost"

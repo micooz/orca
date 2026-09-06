@@ -1,4 +1,10 @@
 {
+  "sourceControl": {
+    "tree": {
+      "collapseAll": "Contraer todo",
+      "expandAll": "Expandir todo"
+    }
+  },
   "app": {
     "recoverableError": {
       "rootTitle": "Orca tuvo un error de renderizado.",

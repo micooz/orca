@@ -88,6 +88,7 @@ export function useSourceControlFileListing({
     visibleTreeRowsBySection,
     visibleListRowsBySection,
     visibleBranchTreeRows,
+    treeDirectoryKeys,
     visibleSelectionEntries
   } = useSourceControlFileProjection({
     entries,
@@ -231,6 +232,7 @@ export function useSourceControlFileListing({
     setIsExecutingBulk,
     submoduleStatusByKey,
     toggleSubmodule,
+    treeDirectoryKeys,
     unfilteredDisplaySectionsById,
     unresolvedConflictReviewEntries,
     unresolvedConflicts,

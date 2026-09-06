@@ -147,6 +147,7 @@ const UiUpdateFields = z
     // payload (sidebar widths, filters, agent acks) for every paired client.
     showDotfilesByWorktree: z.record(z.string(), z.boolean()).optional(),
     sourceControlCollapsedSectionsByWorktree: z.record(z.string(), z.array(z.string())).optional(),
+    sourceControlCollapsedTreeDirsByWorktree: z.record(z.string(), z.array(z.string())).optional(),
     collapsedGroups: StringArray.optional(),
     uiZoomLevel: z.number().finite().optional(),
     editorFontZoomLevel: z.number().finite().optional(),

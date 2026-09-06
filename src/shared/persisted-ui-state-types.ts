@@ -76,6 +76,8 @@ export type PersistedUIState = {
   showDotfilesByWorktree?: Record<string, boolean>
   /** Per-worktree Source Control section collapse state. */
   sourceControlCollapsedSectionsByWorktree?: Record<string, string[]>
+  /** Per-worktree Source Control tree directory collapse state. */
+  sourceControlCollapsedTreeDirsByWorktree?: Record<string, string[]>
   filterRepoIds: string[]
   /** Agents-view host scope; deliberately separate from visibleWorkspaceHostIds so a monitoring surface never inherits nav filters silently. `null` = all hosts. */
   agentsVisibleHostIds?: VisibleWorkspaceHostIds

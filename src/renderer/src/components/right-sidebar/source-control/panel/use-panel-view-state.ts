@@ -6,6 +6,10 @@ import type { SourceControlStoreActions } from '../listing/use-store-actions'
 import type { SourceControlWorktreeContext } from '../listing/use-worktree-context'
 import { useAppStore } from '@/store'
 import { DEFAULT_SOURCE_CONTROL_COLLAPSED_SECTIONS } from '../../../../../../shared/source-control-collapsed-sections'
+import {
+  collapseSourceControlTreeDirectories,
+  expandSourceControlTreeDirectories
+} from '../source-control-tree-collapse'
 
 /**
  * Local presentation state for the Source Control panel: filter, collapsed sections/directories,
@@ -45,7 +49,16 @@ export function useSourceControlPanelViewState({
   )
   const sourceControlViewMode = persistedSourceControlViewMode
   const sourceControlGroupOrder = resolveSourceControlGroupOrder(settings?.sourceControlGroupOrder)
-  const [collapsedTreeDirs, setCollapsedTreeDirs] = useState<Set<string>>(new Set())
+  const collapsedTreeDirsByWorktree = useAppStore(
+    (state) => state.sourceControlCollapsedTreeDirsByWorktree
+  )
+  const setCollapsedTreeDirsForWorktree = useAppStore(
+    (state) => state.setSourceControlCollapsedTreeDirsForWorktree
+  )
+  const collapsedTreeDirs = useMemo(
+    () => new Set((activeWorktreeId && collapsedTreeDirsByWorktree[activeWorktreeId]) ?? []),
+    [activeWorktreeId, collapsedTreeDirsByWorktree]
+  )
   const [baseRefDialogOpen, setBaseRefDialogOpen] = useState(false)
   const [filterQuery, setFilterQuery] = useState('')
   const isGitHistoryExpanded = !collapsedSections.has('history')
@@ -64,7 +77,6 @@ export function useSourceControlPanelViewState({
   if (viewStateWorktreeId !== activeWorktreeId) {
     setViewStateWorktreeId(activeWorktreeId)
     setFilterExpanded(false)
-    setCollapsedTreeDirs(new Set())
     setBaseRefDialogOpen(false)
     // Why: don't reset defaultBaseRef here — it's repo-scoped (resolved on activeRepo change); resetting would clobber non-main defaults.
     setFilterQuery('')
@@ -87,22 +99,50 @@ export function useSourceControlPanelViewState({
     [activeWorktreeId, collapsedSections, setCollapsedSectionsForWorktree]
   )
 
-  const toggleTreeDir = useCallback((key: string) => {
-    setCollapsedTreeDirs((prev) => {
-      const next = new Set(prev)
+  const toggleTreeDir = useCallback(
+    (key: string) => {
+      if (!activeWorktreeId) {
+        return
+      }
+      const next = new Set(collapsedTreeDirs)
       if (next.has(key)) {
         next.delete(key)
       } else {
         next.add(key)
       }
-      return next
-    })
-  }, [])
+      setCollapsedTreeDirsForWorktree(activeWorktreeId, [...next])
+    },
+    [activeWorktreeId, collapsedTreeDirs, setCollapsedTreeDirsForWorktree]
+  )
+
+  const collapseAllTreeDirs = useCallback(
+    (directoryKeys: readonly string[]) => {
+      if (activeWorktreeId) {
+        setCollapsedTreeDirsForWorktree(activeWorktreeId, [
+          ...collapseSourceControlTreeDirectories(collapsedTreeDirs, directoryKeys)
+        ])
+      }
+    },
+    [activeWorktreeId, collapsedTreeDirs, setCollapsedTreeDirsForWorktree]
+  )
+
+  const expandAllTreeDirs = useCallback(
+    (directoryKeys: readonly string[]) => {
+      if (activeWorktreeId) {
+        setCollapsedTreeDirsForWorktree(activeWorktreeId, [
+          ...expandSourceControlTreeDirectories(collapsedTreeDirs, directoryKeys)
+        ])
+      }
+    },
+    [activeWorktreeId, collapsedTreeDirs, setCollapsedTreeDirsForWorktree]
+  )
 
   return {
     baseRefDialogOpen,
+    collapseAllTreeDirs,
     collapsedSections,
     collapsedTreeDirs,
+    expandAllTreeDirs,
     fileListScrollElement,
     filterExpanded,
     filterQuery,

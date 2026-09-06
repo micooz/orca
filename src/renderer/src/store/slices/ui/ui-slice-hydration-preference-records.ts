@@ -2,12 +2,15 @@ import type { PersistedUIState } from '../../../../../shared/persisted-ui-state-
 import type { UISlice } from './ui-slice-contract'
 import {
   sanitizeShowDotfilesByWorktree,
-  sanitizeSourceControlCollapsedSectionsByWorktree
+  sanitizeSourceControlCollapsedSectionsByWorktree,
+  normalizeSourceControlCollapsedTreeDirsByWorktree
 } from './ui-slice-hydration-sanitizers'
 
 type HydratedPreferenceRecords = Pick<
   UISlice,
-  'showDotfilesByWorktree' | 'sourceControlCollapsedSectionsByWorktree'
+  | 'showDotfilesByWorktree'
+  | 'sourceControlCollapsedSectionsByWorktree'
+  | 'sourceControlCollapsedTreeDirsByWorktree'
 >
 
 export function hydrateUIPreferenceRecords(ui: PersistedUIState): HydratedPreferenceRecords {
@@ -15,6 +18,9 @@ export function hydrateUIPreferenceRecords(ui: PersistedUIState): HydratedPrefer
     showDotfilesByWorktree: sanitizeShowDotfilesByWorktree(ui.showDotfilesByWorktree),
     sourceControlCollapsedSectionsByWorktree: sanitizeSourceControlCollapsedSectionsByWorktree(
       ui.sourceControlCollapsedSectionsByWorktree
+    ),
+    sourceControlCollapsedTreeDirsByWorktree: normalizeSourceControlCollapsedTreeDirsByWorktree(
+      ui.sourceControlCollapsedTreeDirsByWorktree
     )
   }
 }

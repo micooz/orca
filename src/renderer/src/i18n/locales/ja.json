@@ -1,4 +1,10 @@
 {
+  "sourceControl": {
+    "tree": {
+      "collapseAll": "すべて折りたたむ",
+      "expandAll": "すべて展開"
+    }
+  },
   "app": {
     "recoverableError": {
       "rootTitle": "Orca でレンダラーエラーが発生しました。",

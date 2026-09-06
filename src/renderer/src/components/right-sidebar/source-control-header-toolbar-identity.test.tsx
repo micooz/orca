@@ -44,11 +44,14 @@ function renderToolbar(options?: {
   visibleCreatePrHeaderAction?: PrimaryAction | null
   hostedReview?: HostedReviewInfo | null
   suppressedGitHubPRNumber?: number | null
+  filterExpanded?: boolean
+  treeCollapseAction?: 'collapse' | 'expand'
+  treeCollapseDisabled?: boolean
 }): string {
   return renderToStaticMarkup(
     <SourceControlHeaderToolbar
       filterQuery=""
-      filterExpanded={false}
+      filterExpanded={options?.filterExpanded ?? false}
       onFilterQueryChange={vi.fn()}
       onFilterExpandedChange={vi.fn()}
       visibleCreatePrHeaderAction={
@@ -71,6 +74,9 @@ function renderToolbar(options?: {
       branchCompareRefreshDisabled={false}
       diffCommentCount={0}
       onExpandNotes={vi.fn()}
+      treeCollapseAction={options?.treeCollapseAction ?? 'collapse'}
+      treeCollapseDisabled={options?.treeCollapseDisabled ?? true}
+      onToggleAllTreeDirs={vi.fn()}
       branchSummary={options?.branchSummary === undefined ? readySummary : options.branchSummary}
       compareBaseRef={options?.compareBaseRef === undefined ? null : options.compareBaseRef}
       headDisplay={
@@ -84,6 +90,17 @@ function renderToolbar(options?: {
 }
 
 describe('SourceControlHeaderToolbar branch identity', () => {
+  it('keeps the directory toggle visible when the filter input expands', () => {
+    expect(renderToolbar()).toContain('aria-label="Collapse All"')
+    expect(
+      renderToolbar({
+        filterExpanded: true,
+        treeCollapseAction: 'expand',
+        treeCollapseDisabled: false
+      })
+    ).toContain('aria-label="Expand All"')
+  })
+
   it('shows the relink recovery instead of blank chrome for a matched unlinked PR', () => {
     const markup = renderToolbar({
       visibleCreatePrHeaderAction: null,

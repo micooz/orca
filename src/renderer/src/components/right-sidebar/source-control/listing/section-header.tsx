@@ -24,7 +24,7 @@ export function SectionHeader({
   // Why: shared rounded container so the hover background spans the whole row instead of clipping around the label.
   return (
     <div className="pl-1 pr-3 pt-3 pb-1">
-      <div className="group/section flex items-center rounded-md pr-1 hover:bg-accent hover:text-accent-foreground">
+      <div className="group/section flex min-h-6 items-center rounded-md pr-1 hover:bg-accent hover:text-accent-foreground">
         <button
           type="button"
           className="flex flex-1 items-center gap-1 px-0.5 py-0.5 text-left text-xs font-semibold uppercase tracking-wider text-foreground/70 group-hover/section:text-accent-foreground"

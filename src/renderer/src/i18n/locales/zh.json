@@ -1,4 +1,10 @@
 {
+  "sourceControl": {
+    "tree": {
+      "collapseAll": "全部折叠",
+      "expandAll": "全部展开"
+    }
+  },
   "app": {
     "recoverableError": {
       "rootTitle": "Orca 遇到渲染器错误。",

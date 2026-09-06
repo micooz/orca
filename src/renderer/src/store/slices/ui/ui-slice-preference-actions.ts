@@ -30,7 +30,6 @@ import {
   ALL_AUTOMATION_HOSTS_FILTER,
   toPersistedAutomationHostFilter
 } from '../../../../../shared/automation-host-filter'
-import { normalizeSourceControlCollapsedSections } from '../../../../../shared/source-control-collapsed-sections'
 import {
   clampWorkspaceBoardColumnWidth,
   clampWorkspaceBoardOpacity,
@@ -38,6 +37,7 @@ import {
   normalizeWorkspaceStatuses,
   WORKSPACE_BOARD_COLUMN_WIDTH_DEFAULT
 } from '../../../../../shared/workspace-statuses'
+import { createSourceControlPreferenceActions } from './ui-slice-source-control-preference-actions'
 
 export function createUiPreferenceActions(set: UISliceSet, get: UISliceGet): Partial<UISlice> {
   return {
@@ -151,19 +151,7 @@ export function createUiPreferenceActions(set: UISliceSet, get: UISliceGet): Par
         return { showDotfilesByWorktree: next }
       }),
 
-    sourceControlCollapsedSectionsByWorktree: {},
-    setSourceControlCollapsedSectionsForWorktree: (worktreeId, sections) =>
-      set((s) => {
-        if (!worktreeId) {
-          return s
-        }
-        return {
-          sourceControlCollapsedSectionsByWorktree: {
-            ...s.sourceControlCollapsedSectionsByWorktree,
-            [worktreeId]: normalizeSourceControlCollapsedSections(sections)
-          }
-        }
-      }),
+    ...createSourceControlPreferenceActions(set),
 
     filterRepoIds: [],
     setFilterRepoIds: (ids) => set({ filterRepoIds: ids }),

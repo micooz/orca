@@ -275,6 +275,7 @@ describe('useSourceControlFileProjection view-mode gating', () => {
     expect(counters.injectExpandedSubmoduleEntries).toBeGreaterThan(0)
     expect(result.current.visibleTreeRowsBySection).toEqual({})
     expect(result.current.visibleBranchTreeRows).toEqual([])
+    expect(result.current.treeDirectoryKeys).toEqual([])
   })
 
   it('builds no list projection in tree mode', () => {
@@ -289,6 +290,18 @@ describe('useSourceControlFileProjection view-mode gating', () => {
     expect(counters.buildGitStatusSourceControlTree).toBeGreaterThan(0)
     expect(counters.buildSourceControlTree).toBeGreaterThan(0)
     expect(result.current.visibleListRowsBySection).toEqual({})
+    expect(result.current.treeDirectoryKeys.some((key) => key.startsWith('dir::unstaged::'))).toBe(
+      true
+    )
+    expect(result.current.treeDirectoryKeys.some((key) => key.startsWith('dir::staged::'))).toBe(
+      true
+    )
+    expect(result.current.treeDirectoryKeys.some((key) => key.startsWith('dir::untracked::'))).toBe(
+      true
+    )
+    expect(result.current.treeDirectoryKeys.some((key) => key.startsWith('dir::branch::'))).toBe(
+      true
+    )
   })
 
   it('has the other mode fully projected on the first render after a switch', () => {

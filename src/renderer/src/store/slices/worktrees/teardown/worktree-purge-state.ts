@@ -173,6 +173,9 @@ export function buildWorktreePurgeState(
     sourceControlCollapsedSectionsByWorktree: omitByWorktree(
       s.sourceControlCollapsedSectionsByWorktree
     ),
+    sourceControlCollapsedTreeDirsByWorktree: omitByWorktree(
+      s.sourceControlCollapsedTreeDirsByWorktree
+    ),
     expandedDirs: omitByWorktree(s.expandedDirs),
     // Per-file editor state for removed files
     editorDrafts: omitByFileId(s.editorDrafts),

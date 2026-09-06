@@ -505,6 +505,37 @@ describe('createUISlice hydratePersistedUI', () => {
     })
   })
 
+  it('hydrates persisted Source Control directory collapse state per worktree', () => {
+    const store = createUIStore()
+
+    store.getState().hydratePersistedUI(
+      makePersistedUI({
+        sourceControlCollapsedTreeDirsByWorktree: {
+          'repo-1::/repo': ['staged:src', 'staged:src', 'branch:docs'],
+          constructor: ['branch:unsafe']
+        }
+      })
+    )
+
+    expect(store.getState().sourceControlCollapsedTreeDirsByWorktree).toEqual({
+      'repo-1::/repo': ['staged:src', 'branch:docs']
+    })
+  })
+
+  it('stores Source Control directory collapse state independently per worktree', () => {
+    const store = createUIStore()
+
+    store
+      .getState()
+      .setSourceControlCollapsedTreeDirsForWorktree('repo-1::/repo', ['staged:src', 'staged:src'])
+    store.getState().setSourceControlCollapsedTreeDirsForWorktree('repo-2::/repo', ['branch:docs'])
+
+    expect(store.getState().sourceControlCollapsedTreeDirsByWorktree).toEqual({
+      'repo-1::/repo': ['staged:src'],
+      'repo-2::/repo': ['branch:docs']
+    })
+  })
+
   it('does not churn persisted UI references when hydration is identical by value', () => {
     const store = createUIStore()
     const persistedUI = makePersistedUI({

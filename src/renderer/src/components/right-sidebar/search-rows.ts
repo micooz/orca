@@ -5,7 +5,12 @@ import type {
   SearchResult
 } from '../../../../shared/code-search-types'
 import type { FileSearchViewMode } from '../../../../shared/ui-chrome-types'
-import { buildPathTree, compactPathTree, type PathTreeNode } from './path-tree'
+import {
+  buildPathTree,
+  collectPathTreeDirectoryKeys,
+  compactPathTree,
+  type PathTreeNode
+} from './path-tree'
 
 type SearchTreeEntry = SearchFileResult & { path: string }
 
@@ -82,16 +87,7 @@ function buildTreeProjection(
   }))
   const tree = compactPathTree(buildPathTree('search', entries, {}))
   const rows: SearchRow[] = []
-  const directoryKeys: string[] = []
-
-  const collectDirectoryKeys = (node: PathTreeNode<SearchTreeEntry>): void => {
-    if (node.type === 'file') {
-      return
-    }
-    directoryKeys.push(node.key)
-    node.children.forEach(collectDirectoryKeys)
-  }
-  tree.forEach(collectDirectoryKeys)
+  const directoryKeys = collectPathTreeDirectoryKeys(tree)
 
   const visit = (node: PathTreeNode<SearchTreeEntry>): void => {
     if (node.type === 'file') {

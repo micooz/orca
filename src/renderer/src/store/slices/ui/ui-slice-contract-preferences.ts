@@ -67,6 +67,11 @@ export type UISlicePreferences = {
     worktreeId: string,
     sections: readonly string[]
   ) => void
+  sourceControlCollapsedTreeDirsByWorktree: Record<string, string[]>
+  setSourceControlCollapsedTreeDirsForWorktree: (
+    worktreeId: string,
+    dirs: readonly string[]
+  ) => void
   filterRepoIds: readonly string[]
   setFilterRepoIds: (ids: readonly string[]) => void
   /** Agents-view scope filters, independent from workspace navigation filters. */

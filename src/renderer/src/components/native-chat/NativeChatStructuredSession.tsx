@@ -20,6 +20,15 @@ import { NativeChatOrchestrationPausedNotice } from './NativeChatOrchestrationPa
 import { useNativeChatImageRuntimeContext } from './native-chat-image-runtime-context'
 import { useStructuredNativeChatPaneCommands } from './use-structured-native-chat-pane-commands'
 import type { NativeChatStructuredViewProps } from './native-chat-view-types'
+import { NativeChatBackgroundTasksStatus } from './NativeChatBackgroundTasksStatus'
+
+type StoppingBackgroundTasks = {
+  sessionId: string
+  taskIds: ReadonlySet<string>
+  all: boolean
+}
+
+const NO_STOPPING_TASKS: ReadonlySet<string> = new Set()
 
 function encodeQuestionAnswer(questionId: string, answer: string): string {
   return `${encodeURIComponent(questionId)}:${encodeURIComponent(answer)}`
@@ -30,6 +39,8 @@ export function NativeChatStructuredSession(
 ): React.JSX.Element {
   const controller = useStructuredAgentSession(props)
   const [composerError, setComposerError] = useState<string | null>(null)
+  const [stoppingBackgroundTasks, setStoppingBackgroundTasks] =
+    useState<StoppingBackgroundTasks | null>(null)
   const [optionPickerRequest, setOptionPickerRequest] = useState<{
     id: string
     sequence: number
@@ -80,7 +91,9 @@ export function NativeChatStructuredSession(
   const fontScale = useNativeChatFontScale(viewState.kind === 'ready')
   const fileLinkContext = useNativeChatFileLinkContext(props.tabId)
   const imageRuntimeContext = useNativeChatImageRuntimeContext(props.tabId)
-  const fileLinkClick = useNativeChatFileLinkClick(props.allowFileUriLinks ? fileLinkContext : null)
+  const fileLinkClick = useNativeChatFileLinkClick(fileLinkContext)
+  const activeStoppingBackgroundTasks =
+    stoppingBackgroundTasks?.sessionId === props.sessionId ? stoppingBackgroundTasks : null
   const prompt = controller.prompts[0] ?? null
   const questionBody = prompt?.body.kind === 'question' ? prompt.body : null
   const questions =
@@ -271,6 +284,45 @@ export function NativeChatStructuredSession(
         <p className="mx-auto w-full max-w-4xl px-4 py-1 text-xs text-destructive">
           {controller.error ?? composerError}
         </p>
+      ) : null}
+      {controller.isMonitoringBackgroundTasks ? (
+        <NativeChatBackgroundTasksStatus
+          tasks={controller.backgroundTasks}
+          supportsTaskStop={controller.supportsBackgroundTaskStop}
+          stoppingTaskIds={activeStoppingBackgroundTasks?.taskIds ?? NO_STOPPING_TASKS}
+          stoppingAll={activeStoppingBackgroundTasks?.all ?? false}
+          onStop={(taskId) => {
+            const targetSessionId = props.sessionId
+            setStoppingBackgroundTasks((current) => {
+              const taskIds = new Set(
+                current?.sessionId === targetSessionId ? current.taskIds : NO_STOPPING_TASKS
+              )
+              if (taskId) {
+                taskIds.add(taskId)
+              }
+              return {
+                sessionId: targetSessionId,
+                taskIds,
+                all: taskId ? current?.sessionId === targetSessionId && current.all : true
+              }
+            })
+            void controller.stopBackgroundTask(taskId).finally(() => {
+              setStoppingBackgroundTasks((current) => {
+                if (current?.sessionId !== targetSessionId) {
+                  return current
+                }
+                const taskIds = new Set(current.taskIds)
+                if (taskId) {
+                  taskIds.delete(taskId)
+                }
+                const all = taskId ? current.all : false
+                return taskIds.size === 0 && !all
+                  ? null
+                  : { sessionId: targetSessionId, taskIds, all }
+              })
+            })
+          }}
+        />
       ) : null}
       {prompt ? null : (
         <NativeChatComposer

@@ -114,12 +114,14 @@ export function buildPathTree<
     }
 
     let parent = root
+    // Why: accumulating avoids repeatedly copying the same ancestor segments.
+    let ancestorPath = ''
     for (let index = 0; index < segments.length - 1; index += 1) {
       const name = segments[index]
-      const path = segments.slice(0, index + 1).join('/')
+      ancestorPath = ancestorPath ? `${ancestorPath}/${name}` : name
       let directory = parent.directoryChildren.get(name)
       if (!directory) {
-        directory = makeDirectoryNode(namespace, path, name, index, metadata)
+        directory = makeDirectoryNode(namespace, ancestorPath, name, index, metadata)
         parent.directoryChildren.set(name, directory)
         parent.children.push(directory)
       }
